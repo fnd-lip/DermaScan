@@ -25,7 +25,6 @@ export const TelaInicio: React.FC<TelaInicioProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-slate-50 text-gray-800 p-5 overflow-y-auto space-y-5 font-sans pb-20 select-none">
-      {/* Header and Welcome */}
       <div>
         <h4 className="text-xs text-teal-600 font-bold uppercase tracking-wider">Painel Clínico</h4>
         <h2 className="text-xl font-bold text-gray-900 mt-1">
@@ -36,7 +35,6 @@ export const TelaInicio: React.FC<TelaInicioProps> = ({
         </p>
       </div>
 
-      {/* Primary Banner Callout CARD */}
       <div className="bg-linear-to-br from-teal-600 to-teal-800 text-white rounded-2xl p-4.5 shadow-md shadow-teal-700/10 flex flex-col gap-3">
         <div className="flex justify-between items-start">
           <div>
@@ -60,7 +58,6 @@ export const TelaInicio: React.FC<TelaInicioProps> = ({
         </button>
       </div>
 
-      {/* Last Analysed Item Card */}
       <div>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-2.5">Última Análise Realizada</h3>
         {ultimaAnalise ? (
@@ -111,7 +108,6 @@ export const TelaInicio: React.FC<TelaInicioProps> = ({
         )}
       </div>
 
-      {/* Quick navigation links */}
       <div>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-2.5">Atalhos Rápidos</h3>
         <div className="grid grid-cols-2 gap-3">

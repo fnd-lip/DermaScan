@@ -166,9 +166,7 @@ export const TelaPerfil: React.FC<TelaPerfilProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-slate-50 text-gray-800 p-5 overflow-y-auto font-sans pb-20 select-none">
-      {/* Upper Profile presentation card */}
       <div className="bg-white border border-gray-100 p-4.5 rounded-2xl flex items-center gap-4 shadow-sm">
-        {/* Avatar circle */}
         <div className="w-14 h-14 bg-teal-55 bg-teal-50 text-teal-700 font-bold border border-teal-100 rounded-full flex items-center justify-center text-lg shadow-inner">
           {nomeUsuario
             .split(" ")
@@ -197,7 +195,6 @@ export const TelaPerfil: React.FC<TelaPerfilProps> = ({
         </div>
       </div>
 
-      {/* Configuration Sliders / Switches */}
       <div>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-2.5">
           Preferências
@@ -269,7 +266,6 @@ export const TelaPerfil: React.FC<TelaPerfilProps> = ({
         </div>
       </div>
 
-      {/* Accordion List sections (Sobre, Privacidade, Permissões) */}
       <div>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-2.5">
           Políticas e Atribuições
@@ -310,7 +306,6 @@ export const TelaPerfil: React.FC<TelaPerfilProps> = ({
         </div>
       </div>
 
-      {/* Logout Command reset button */}
       <div className="pt-3">
         {confirmandoSair ? (
           <div className="bg-red-50 border border-red-150 rounded-2xl p-4.5 flex flex-col items-center text-center space-y-3 animate-fadeIn">

@@ -20,7 +20,6 @@ export const TelaHistorico: React.FC<TelaHistoricoProps> = ({
 }) => {
   const [filtro, setFiltro] = useState<TipoFiltro>('todos');
 
-  // Filter list by selected risk level
   const historicoFiltrado = historico.filter(item => {
     if (filtro === 'todos') return true;
     const itemAtencao = item.nivelAtencao ? item.nivelAtencao.toLowerCase() : 'baixo';
@@ -40,7 +39,6 @@ export const TelaHistorico: React.FC<TelaHistoricoProps> = ({
   return (
     <div className="flex flex-col h-full bg-slate-50 text-gray-800 p-5 overflow-y-auto font-sans pb-20 select-none">
       
-      {/* Header and description */}
       <div className="flex justify-between items-start">
         <div>
           <h4 className="text-xs text-teal-600 font-bold uppercase tracking-wider">Histórico</h4>
@@ -62,7 +60,6 @@ export const TelaHistorico: React.FC<TelaHistoricoProps> = ({
         )}
       </div>
 
-      {/* Filter Badges slider */}
       {historico.length > 0 && (
         <div className="my-1">
           <div className="flex items-center gap-1.5 text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 pl-1">
@@ -88,7 +85,7 @@ export const TelaHistorico: React.FC<TelaHistoricoProps> = ({
         </div>
       )}
 
-      {/* List content */}
+
       <div className="space-y-3.5 flex-1 flex flex-col mt-2">
         {historico.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-6 gap-3 py-16">
