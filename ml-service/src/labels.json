@@ -1,0 +1,12 @@
+{
+  "classePrevista": "Melanoma",
+  "confianca": 0.89,
+  "nivelAtencao": "Alto",
+  "probabilidades": [
+    {
+      "classe": "Melanoma",
+      "probabilidade": 0.89
+    }
+  ],
+  "fonte": "MobileNetV2 BentoML"
+}

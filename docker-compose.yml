@@ -12,5 +12,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  ml-service:
+    build:
+      context: ./ml-service
+    container_name: dermascan_ml_service
+    volumes:
+      - ./ml-service:/app
+    working_dir: /app
+    command: python -c "print('ML service pronto')"
+
 volumes:
   postgres_data:
