@@ -1,16 +1,23 @@
-import { Request, Response } from "express";
+import { Request, Response, type CookieOptions } from "express";
 import { autenticarUsuario, cadastrarUsuario } from "../services/auth.service";
 import { prisma } from "../database/prisma";
 
 const cookieName = "dermascan_token";
 
-function configurarCookieToken(res: Response, token: string) {
-  res.cookie(cookieName, token, {
+function obterConfiguracaoCookie(): CookieOptions {
+  const cookieSeguro = process.env.COOKIE_SECURE === "true";
+
+  return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: cookieSeguro,
+    sameSite: cookieSeguro ? "none" : "lax",
     maxAge: 1000 * 60 * 60 * 24 * 7,
-  });
+    path: "/",
+  };
+}
+
+function configurarCookieToken(res: Response, token: string) {
+  res.cookie(cookieName, token, obterConfiguracaoCookie());
 }
 
 export async function registrarUsuario(
@@ -132,7 +139,7 @@ export async function obterUsuarioAtual(
 }
 
 export function logoutUsuario(_req: Request, res: Response): void {
-  res.clearCookie(cookieName);
+  res.clearCookie(cookieName, obterConfiguracaoCookie());
 
   res.json({
     mensagem: "Logout realizado com sucesso.",
