@@ -27,6 +27,16 @@ jobs:
         working-directory: backend
         run: npm install
 
+      - name: Generate Prisma client
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://dermascan:dermascan123@localhost:5432/dermascan_db?schema=public
+          JWT_SECRET: ci_secret
+          JWT_EXPIRES_IN: 7d
+          NODE_ENV: test
+          ML_SERVICE_URL: http://localhost:5001
+        run: npm exec -- prisma generate
+
       - name: Build backend
         working-directory: backend
         env:
