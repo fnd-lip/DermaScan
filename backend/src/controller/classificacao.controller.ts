@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
+import type { Prisma } from "../generated/prisma";
 import { classificarLesao } from "../services/classificacao.service";
 import { classificarComMlService } from "../services/ml.service";
+
+function converterParaJsonPrisma(valor: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(valor ?? [])) as Prisma.InputJsonValue;
+}
 
 export async function classificarImagem(
   req: Request,
@@ -39,6 +44,10 @@ export async function classificarImagem(
 
     const imagemUrlFinal = imageBase64 || predicaoComImagem.imagemUrl || null;
 
+    const probabilidadesJson = converterParaJsonPrisma(
+      predicao.probabilidades ?? [],
+    );
+
     const analise = await prisma.analise.create({
       data: {
         usuarioId,
@@ -48,7 +57,7 @@ export async function classificarImagem(
         confianca: predicao.confianca,
         nivelAtencao: predicao.nivelAtencao,
         fonte: predicao.fonte,
-        probabilidades: predicao.probabilidades,
+        probabilidades: probabilidadesJson,
       },
     });
 
@@ -57,7 +66,7 @@ export async function classificarImagem(
       classePrevista: predicao.classePrevista,
       confianca: predicao.confianca,
       nivelAtencao: predicao.nivelAtencao,
-      probabilidades: predicao.probabilidades,
+      probabilidades: predicao.probabilidades ?? [],
       fonte: predicao.fonte,
       imagemUri: imagemUrlFinal,
       dataAnalise: analise.criadoEm.toISOString(),
@@ -70,6 +79,7 @@ export async function classificarImagem(
     });
   }
 }
+
 export async function listarAnalises(
   req: Request,
   res: Response,
