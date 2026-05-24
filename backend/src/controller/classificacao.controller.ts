@@ -3,9 +3,23 @@ import { prisma } from "../database/prisma";
 import type { Prisma } from "../generated/prisma";
 import { classificarLesao } from "../services/classificacao.service";
 import { classificarComMlService } from "../services/ml.service";
+import { salvarImagemBase64 } from "../services/arquivo.service";
 
 function converterParaJsonPrisma(valor: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(valor ?? [])) as Prisma.InputJsonValue;
+}
+
+function montarUrlImagem(
+  req: Request,
+  imagemUrl: string | null,
+): string | null {
+  if (!imagemUrl) return null;
+
+  if (imagemUrl.startsWith("http")) return imagemUrl;
+
+  if (imagemUrl.startsWith("data:image")) return imagemUrl;
+
+  return `${req.protocol}://${req.get("host")}${imagemUrl}`;
 }
 
 export async function classificarImagem(
@@ -42,7 +56,12 @@ export async function classificarImagem(
       imagemUrl?: string | null;
     };
 
-    const imagemUrlFinal = imageBase64 || predicaoComImagem.imagemUrl || null;
+    const imagemSalva = imageBase64
+      ? await salvarImagemBase64(imageBase64, usuarioId)
+      : null;
+
+    const imagemUrlFinal =
+      imagemSalva?.caminhoRelativo || predicaoComImagem.imagemUrl || null;
 
     const probabilidadesJson = converterParaJsonPrisma(
       predicao.probabilidades ?? [],
@@ -50,7 +69,11 @@ export async function classificarImagem(
 
     const analise = await prisma.analise.create({
       data: {
-        usuarioId,
+        usuario: {
+          connect: {
+            id: usuarioId,
+          },
+        },
         sampleId: sampleId ?? null,
         imagemUrl: imagemUrlFinal,
         classePrevista: predicao.classePrevista,
@@ -68,7 +91,7 @@ export async function classificarImagem(
       nivelAtencao: predicao.nivelAtencao,
       probabilidades: predicao.probabilidades ?? [],
       fonte: predicao.fonte,
-      imagemUri: imagemUrlFinal,
+      imagemUri: montarUrlImagem(req, imagemUrlFinal),
       dataAnalise: analise.criadoEm.toISOString(),
     });
   } catch (erro) {
@@ -111,7 +134,7 @@ export async function listarAnalises(
         nivelAtencao: analise.nivelAtencao,
         probabilidades: analise.probabilidades ?? [],
         dataAnalise: analise.criadoEm.toISOString(),
-        imagemUri: analise.imagemUrl,
+        imagemUri: montarUrlImagem(req, analise.imagemUrl),
         fonte: analise.fonte,
       })),
     );

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 import { authRoutes } from "./routes/auth.routes";
 import { classificacaoRoutes } from "./routes/classificacao.routes";
+import path from "path";
 
 dotenv.config();
 
@@ -30,5 +31,10 @@ app.get("/health", (_req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/api", classificacaoRoutes);
+
+app.use(
+  "/uploads",
+  express.static(path.resolve(process.cwd(), "uploads")),
+);
 
 export { app };
