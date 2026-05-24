@@ -1,0 +1,46 @@
+﻿name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build backend and frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Build backend
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://dermascan:dermascan123@localhost:5432/dermascan_db?schema=public
+          JWT_SECRET: ci_secret
+          JWT_EXPIRES_IN: 7d
+          NODE_ENV: test
+          ML_SERVICE_URL: http://localhost:5001
+        run: npm run build
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build

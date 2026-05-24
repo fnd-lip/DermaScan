@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt, { type Secret, type SignOptions } from "jsonwebtoken";
 import { prisma } from "../database/prisma";
 
 interface DadosCadastro {
@@ -76,20 +76,22 @@ export async function autenticarUsuario({ email, senha }: DadosLogin) {
   };
 }
 
-export function gerarTokenJwt(usuarioId: string) {
+export function gerarTokenJwt(usuarioId: string): string {
   const segredo = process.env.JWT_SECRET;
 
   if (!segredo) {
     throw new Error("JWT_SECRET não configurado.");
   }
 
+  const opcoes: SignOptions = {
+    expiresIn: (process.env.JWT_EXPIRES_IN || "7d") as SignOptions["expiresIn"],
+  };
+
   return jwt.sign(
     {
       sub: usuarioId,
     },
-    segredo,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN || "7d",
-    },
+    segredo as Secret,
+    opcoes,
   );
 }
