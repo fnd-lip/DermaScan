@@ -1,12 +1,44 @@
-{
-  "classePrevista": "Melanoma",
-  "confianca": 0.89,
-  "nivelAtencao": "Alto",
-  "probabilidades": [
-    {
-      "classe": "Melanoma",
-      "probabilidade": 0.89
-    }
-  ],
-  "fonte": "MobileNetV2 BentoML"
-}
+[
+  {
+    "index": 0,
+    "codigo": "akiec",
+    "nome": "Ceratose actínica",
+    "nivelAtencao": "Atenção"
+  },
+  {
+    "index": 1,
+    "codigo": "bcc",
+    "nome": "Carcinoma basocelular",
+    "nivelAtencao": "Alto"
+  },
+  {
+    "index": 2,
+    "codigo": "bkl",
+    "nome": "Ceratose benigna",
+    "nivelAtencao": "Baixo"
+  },
+  {
+    "index": 3,
+    "codigo": "df",
+    "nome": "Dermatofibroma",
+    "nivelAtencao": "Baixo"
+  },
+  {
+    "index": 4,
+    "codigo": "mel",
+    "nome": "Melanoma",
+    "nivelAtencao": "Alto"
+  },
+  {
+    "index": 5,
+    "codigo": "nv",
+    "nome": "Nevo melanocítico",
+    "nivelAtencao": "Baixo"
+  },
+  {
+    "index": 6,
+    "codigo": "vasc",
+    "nome": "Lesão vascular",
+    "nivelAtencao": "Baixo"
+  }
+]

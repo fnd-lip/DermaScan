@@ -1,7 +1,7 @@
-tensorflow
+torch
+torchvision
+timm
 bentoml
-datasets
 pillow
 numpy
-scikit-learn
 python-dotenv

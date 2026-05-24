@@ -1,13 +1,18 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
 import { classificarLesao } from "../services/classificacao.service";
+import { classificarComMlService } from "../services/ml.service";
 
 export async function classificarImagem(
   req: Request,
   res: Response,
 ): Promise<void> {
   try {
-    const { imageBase64, sampleId } = req.body;
+    const { imageBase64, sampleId } = req.body as {
+      imageBase64?: string;
+      sampleId?: string;
+    };
+
     const usuarioId = req.usuarioId;
 
     if (!usuarioId) {
@@ -24,9 +29,15 @@ export async function classificarImagem(
       return;
     }
 
-    const predicao = classificarLesao(sampleId);
+    const predicao = imageBase64
+      ? await classificarComMlService(imageBase64)
+      : classificarLesao(sampleId);
 
-    const imagemUrlFinal = predicao.imagemUrl ?? imageBase64 ?? null;
+    const predicaoComImagem = predicao as typeof predicao & {
+      imagemUrl?: string | null;
+    };
+
+    const imagemUrlFinal = imageBase64 || predicaoComImagem.imagemUrl || null;
 
     const analise = await prisma.analise.create({
       data: {
@@ -59,7 +70,6 @@ export async function classificarImagem(
     });
   }
 }
-
 export async function listarAnalises(
   req: Request,
   res: Response,
