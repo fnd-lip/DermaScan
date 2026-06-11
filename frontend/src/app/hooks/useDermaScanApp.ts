@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   buscarUsuarioAtual,
   classificarImagemLesao,
@@ -43,18 +43,21 @@ export function useDermaScanApp() {
     },
   ]);
 
-  const adicionarLog = (mensagem: string, tipo: TipoLog = "info") => {
-    setLogs((anteriores) => [
-      {
-        tempo: new Date().toLocaleTimeString(),
-        mensagem,
-        tipo,
-      },
-      ...anteriores.slice(0, 15),
-    ]);
-  };
+  const adicionarLog = useCallback(
+    (mensagem: string, tipo: TipoLog = "info") => {
+      setLogs((anteriores) => [
+        {
+          tempo: new Date().toLocaleTimeString(),
+          mensagem,
+          tipo,
+        },
+        ...anteriores.slice(0, 15),
+      ]);
+    },
+    [],
+  );
 
-  const carregarHistoricoDoBackend = async () => {
+  const carregarHistoricoDoBackend = useCallback(async () => {
     try {
       const analises = await listarAnalises();
       setHistorico(analises);
@@ -63,7 +66,7 @@ export function useDermaScanApp() {
       console.error("Falha ao carregar histórico do backend:", erro);
       adicionarLog("Não foi possível carregar o histórico do backend.", "erro");
     }
-  };
+  }, [adicionarLog]);
 
   useEffect(() => {
     const iniciarSessao = async () => {
@@ -99,7 +102,7 @@ export function useDermaScanApp() {
     };
 
     void iniciarSessao();
-  }, []);
+  }, [adicionarLog, carregarHistoricoDoBackend]);
 
   const handleLoginSucesso = (nome: string, email: string) => {
     setUsuarioLogado({ nome, email });
@@ -303,7 +306,7 @@ export function useDermaScanApp() {
   };
 
   const handleReiniciarAppCompleto = () => {
-    handleSairDaConta();
+    void handleSairDaConta();
     setHistorico([]);
     adicionarLog("Aplicação reiniciada para demonstração.", "info");
   };

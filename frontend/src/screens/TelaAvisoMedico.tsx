@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldAlert, CheckCircle, HelpCircle } from 'lucide-react';
+import { ShieldAlert, CheckCircle } from 'lucide-react';
 import { BotaoPrincipal } from '../components/ui/BotaoPrincipal';
 
 interface TelaAvisoMedicoProps {
@@ -12,7 +12,6 @@ export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({ onAceitarAviso
   return (
     <div className="flex flex-col h-full bg-white text-gray-800 p-6 justify-between select-none font-sans overflow-hidden">
       <div>
-        {/* Top Header */}
         <div className="flex items-center gap-2.5 my-3">
           <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0">
             <ShieldAlert className="w-5 h-5" />
@@ -25,7 +24,6 @@ export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({ onAceitarAviso
           </div>
         </div>
 
-        {/* Scrollable content box simulating phone layout */}
         <div className="mt-4 border border-gray-100 rounded-2xl bg-slate-50 p-4 max-h-75 overflow-y-auto space-y-3.5 shadow-inner">
           <p className="text-xs font-semibold text-gray-800 leading-relaxed">
             Por favor, leia atentamente as declarações abaixo antes de utilizar a inteligência artificial do aplicativo:
@@ -57,7 +55,6 @@ export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({ onAceitarAviso
         </div>
       </div>
 
-      {/* Acceptance area blocked and button */}
       <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-4">
         <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl hover:bg-slate-50 active:bg-slate-100 transition-colors border border-transparent hover:border-teal-50">
           <input

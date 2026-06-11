@@ -54,3 +54,11 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+      
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint

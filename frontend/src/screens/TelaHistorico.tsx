@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Predicao } from '../types/Predicao';
 import { ItemHistorico } from '../components/dermatology/ItemHistorico';
-import { History, Shield, Trash2, Calendar, FileText, Filter } from 'lucide-react';
+import { History, Shield, Trash2, Filter } from 'lucide-react';
 
 interface TelaHistoricoProps {
   historico: Predicao[];

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Calendar, ChevronRight, ImageOff, Trash2 } from "lucide-react";
 import { Predicao } from "../../types/Predicao";
 import { obterEstiloRisco } from "../../utils/nivelDeRisco";
@@ -17,13 +17,10 @@ export const ItemHistorico: React.FC<ItemHistoricoProps> = ({
   onDelete,
 }) => {
   const estilo = obterEstiloRisco(item.nivelAtencao);
-  const [erroImagem, setErroImagem] = useState(false);
+  const [imagemComErro, setImagemComErro] = useState<string | null>(null);
 
-  useEffect(() => {
-    setErroImagem(false);
-  }, [item.imagemUri]);
-
-  const temImagemValida = Boolean(item.imagemUri) && !erroImagem;
+  const temImagemValida =
+    Boolean(item.imagemUri) && imagemComErro !== item.imagemUri;
 
   return (
     <div
@@ -37,7 +34,7 @@ export const ItemHistorico: React.FC<ItemHistoricoProps> = ({
             alt={`Imagem da análise ${item.classePrevista}`}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
-            onError={() => setErroImagem(true)}
+            onError={() => setImagemComErro(item.imagemUri ?? null)}
           />
         ) : (
           <div className="w-full h-full bg-teal-50 flex flex-col items-center justify-center text-teal-700 text-[10px] font-bold text-center px-1">

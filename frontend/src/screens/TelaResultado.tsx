@@ -5,8 +5,6 @@ import { CartaoResultado } from "../components/dermatology/CartaoResultado";
 import { BarraProbabilidade } from "../components/ui/BarraProbabilidade";
 import { CartaoAvisoMedico } from "../components/dermatology/CartaoAvisoMedico";
 import {
-  Award,
-  PlusCircle,
   Check,
   Info,
   ChevronDown,

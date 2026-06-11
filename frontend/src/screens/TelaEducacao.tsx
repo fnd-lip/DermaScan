@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, ShieldCheck, Sun, AlertTriangle, ChevronDown, ChevronUp, Stethoscope } from 'lucide-react';
+import { BookOpen, Sun, AlertTriangle, ChevronDown, ChevronUp, Stethoscope } from 'lucide-react';
 
 interface ArtigoEducativo {
   id: string;

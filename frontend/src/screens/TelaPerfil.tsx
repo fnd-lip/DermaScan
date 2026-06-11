@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import {
-  User,
-  Settings,
   ShieldCheck,
   Camera,
   LogOut,
   Info,
   ToggleLeft,
   ToggleRight,
-  Check,
-  Eye,
   AlertTriangle,
 } from "lucide-react";
 

@@ -18,6 +18,9 @@ export async function classificarImagemLesao(
 
     throw new Error(
       "Não foi possível realizar a análise no momento. Verifique sua conexão e tente novamente.",
+      {
+        cause: erro,
+      },
     );
   }
 }

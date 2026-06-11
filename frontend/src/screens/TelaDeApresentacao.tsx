@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Eye, Shield, Camera, Stethoscope } from 'lucide-react';
+import { Shield, Camera, Stethoscope } from 'lucide-react';
 import { BotaoPrincipal } from '../components/ui/BotaoPrincipal';
 
 interface TelaDeApresentacaoProps {
