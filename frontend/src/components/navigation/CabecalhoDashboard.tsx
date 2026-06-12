@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { LogOut, Settings, Shield, User } from 'lucide-react';
-import { UsuarioLogado } from '../../app/types/fluxo';
-import { obterIniciaisUsuario } from '../../utils/usuario';
+import React, { useEffect, useRef, useState } from "react";
+import { LogOut, Settings, Shield, User } from "lucide-react";
+import { UsuarioLogado } from "../../app/types/fluxo";
+import { obterIniciaisUsuario } from "../../utils/usuario";
 
 interface CabecalhoDashboardProps {
   usuarioLogado: UsuarioLogado | null;
@@ -17,8 +17,8 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
   const [menuAberto, setMenuAberto] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  const nomeUsuario = usuarioLogado?.nome || 'Usuário Demo';
-  const emailUsuario = usuarioLogado?.email || 'E-mail não informado';
+  const nomeUsuario = usuarioLogado?.nome || "Usuário Demo";
+  const emailUsuario = usuarioLogado?.email || "E-mail não informado";
 
   useEffect(() => {
     const handleCliqueFora = (evento: MouseEvent) => {
@@ -27,10 +27,18 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
       }
     };
 
-    document.addEventListener('mousedown', handleCliqueFora);
+    const handleTeclaPressionada = (evento: KeyboardEvent) => {
+      if (evento.key === "Escape") {
+        setMenuAberto(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleCliqueFora);
+    document.addEventListener("keydown", handleTeclaPressionada);
 
     return () => {
-      document.removeEventListener('mousedown', handleCliqueFora);
+      document.removeEventListener("mousedown", handleCliqueFora);
+      document.removeEventListener("keydown", handleTeclaPressionada);
     };
   }, []);
 
@@ -51,7 +59,9 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
           <Shield className="w-5 h-5 text-white animate-pulse" />
         </div>
         <div>
-          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">DermaScan</h1>
+          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+            DermaScan
+          </h1>
           <p className="text-xs text-slate-500 font-medium">
             Classificação de Lesões Dermatológicas via Deep Learning
           </p>
@@ -85,8 +95,12 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
                     {obterIniciaisUsuario(nomeUsuario)}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-extrabold text-slate-850 truncate">{nomeUsuario}</p>
-                    <p className="text-xs text-slate-500 truncate">{emailUsuario}</p>
+                    <p className="text-sm font-extrabold text-slate-850 truncate">
+                      {nomeUsuario}
+                    </p>
+                    <p className="text-xs text-slate-500 truncate">
+                      {emailUsuario}
+                    </p>
                   </div>
                 </div>
               </div>
