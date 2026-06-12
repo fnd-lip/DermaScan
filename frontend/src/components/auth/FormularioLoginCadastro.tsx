@@ -52,7 +52,7 @@ export const FormularioLoginCadastro: React.FC<FormularioLoginCadastroProps> = (
       <CampoFormulario
         label="Endereço de E-mail"
         tipo="email"
-        placeholder="felipefebl@gmail.com"
+        placeholder="E-mail"
         valor={email}
         carregando={carregando}
         Icone={Mail}
