@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Predicao } from "../types/Predicao";
+import { normalizarClasseDermatologica } from "../utils/normalizarClasseDermatologica";
 import { BotaoPrincipal } from "../components/ui/BotaoPrincipal";
 import { CartaoResultado } from "../components/dermatology/CartaoResultado";
 import { BarraProbabilidade } from "../components/ui/BarraProbabilidade";
@@ -46,7 +47,7 @@ const DESCRICOES_CLASSES: {
     detalhe:
       "Considerada uma lesão pré-cancerosa epitelial. Se negligenciada por anos, pode evoluir para carcinoma espinocelular. O tratamento médico inclui crioterapia, terapia fotodinâmica ou pomadas imunomoduladoras.",
   },
-  "Nevo melanocítico": {
+  "Nevo melanocitico": {
     sintomas:
       "Mancha pigmentada simétrica, cor uniforme castanha clara ou preta, contornos redondos bem definidos.",
     acao: "Nenhuma ação corretiva urgente é necessária. Pratique a auto-inspeção dermatológica mensal de rotina.",
@@ -85,7 +86,6 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
 }) => {
   const [detalhesExpandido, setDetalhesExpandido] = useState(false);
 
-  // Fallback to average generic details if unknown class
   const detalhesClasse = DESCRICOES_CLASSES[predicao.classePrevista] || {
     sintomas: "Lesão dermatológica registrada.",
     acao: "Consulte um especialista clínico para dirimir dúvidas.",
@@ -94,7 +94,6 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-slate-50 text-gray-800 p-5 overflow-y-auto space-y-4 font-sans pb-20 select-none">
-      {/* Title */}
       <div>
         <h4 className="text-xs text-teal-600 font-bold uppercase tracking-wider">
           Resultado da IA
@@ -104,10 +103,8 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
         </h2>
       </div>
 
-      {/* Primary Result Details Card */}
       <CartaoResultado predicao={predicao} />
 
-      {/* Selected Image Thumbnail preview */}
       <div className="flex gap-3 bg-white p-3 border border-gray-100 rounded-xl items-center">
         <div className="w-14 h-14 rounded-lg overflow-hidden border border-gray-150 shrink-0">
           <img
@@ -122,7 +119,7 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
             Análise de registro
           </span>
           <span className="text-xs font-bold text-gray-800 leading-snug truncate block max-w-47.5">
-            {predicao.classePrevista}
+            {normalizarClasseDermatologica(predicao.classePrevista)}
           </span>
           <span className="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded text-gray-600 mt-0.5 inline-block font-mono">
             {predicao.dataAnalise || "Visualizado agora"}
@@ -130,7 +127,6 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
         </div>
       </div>
 
-      {/* Toggleable Expandable Details Module */}
       <div className="border border-gray-150 bg-white rounded-xl overflow-hidden shadow-xs">
         <button
           onClick={() => setDetalhesExpandido(!detalhesExpandido)}
@@ -173,7 +169,6 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
         )}
       </div>
 
-      {/* Other Class Sorted Probability distribution bars */}
       <div className="bg-white border border-gray-100 p-4 rounded-xl shadow-xs">
         <h4 className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-3.5">
           Distribuição Completa de Sinais
@@ -182,7 +177,7 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
           {predicao.probabilidades.map((prob, index) => (
             <BarraProbabilidade
               key={index}
-              classe={prob.classe}
+              classe={normalizarClasseDermatologica(prob.classe)}
               probabilidade={prob.probabilidade}
               destacar={prob.classe === predicao.classePrevista}
             />
@@ -190,10 +185,8 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
         </div>
       </div>
 
-      {/* Prominent Safety disclaimer card */}
       <CartaoAvisoMedico />
 
-      {/* Action CTA Buttons */}
       <div className="flex flex-col gap-2 pt-2">
         <BotaoPrincipal
           titulo={salvo ? "Salvo no histórico" : "Salvar no histórico"}
