@@ -11,6 +11,8 @@ export default function App() {
     <AppShell
       mostrarCabecalho={estado.faseFluxo === 'abas'}
       usuarioLogado={estado.usuarioLogado}
+      onAbrirPerfil={() => acoes.setAbaAtiva('perfil')}
+      onSairDaConta={acoes.handleSairDaConta}
     >
       {estado.faseFluxo !== 'abas' ? (
         <FluxoAutenticacao
@@ -53,6 +55,3 @@ export default function App() {
     </AppShell>
   );
 }
-
-
-

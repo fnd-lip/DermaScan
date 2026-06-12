@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Camera, History, Smartphone, User } from 'lucide-react';
+import { BookOpen, Camera, History, Smartphone } from 'lucide-react';
 import { AbaAtiva, UsuarioLogado } from '../../app/types/fluxo';
 import { obterIniciaisUsuario } from '../../utils/usuario';
 
@@ -19,7 +19,6 @@ const itensMenu: Array<{
   { id: 'analise', label: 'Nova Análise Dermatológica', Icone: Camera },
   { id: 'historico', label: 'Histórico de Laudos', Icone: History },
   { id: 'educacao', label: 'Guia Educativo ABCDE', Icone: BookOpen },
-  { id: 'perfil', label: 'Configurações', Icone: User },
 ];
 
 export const MenuLateral: React.FC<MenuLateralProps> = ({
@@ -44,7 +43,9 @@ export const MenuLateral: React.FC<MenuLateralProps> = ({
           </div>
           <div className="min-w-0 flex-1">
             <h4 className="text-xs font-bold text-slate-850 truncate">{nomeUsuario}</h4>
-            <p className="text-[10px] text-teal-650 font-bold tracking-wide font-mono uppercase truncate">Clínico Ativo</p>
+            <p className="text-[10px] text-teal-650 font-bold tracking-wide font-mono uppercase truncate">
+              Clínico Ativo
+            </p>
           </div>
         </div>
 
@@ -70,7 +71,9 @@ export const MenuLateral: React.FC<MenuLateralProps> = ({
       </div>
 
       <div className="pt-4 border-t border-slate-100 flex flex-col gap-2">
-        <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider px-2">STATUS CLASSIFICADOR CNN</div>
+        <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider px-2">
+          STATUS CLASSIFICADOR CNN
+        </div>
         <div className="bg-emerald-50 text-emerald-700 text-[10px] font-bold py-2 px-3 rounded-2xl border border-emerald-100 flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
           <span className="truncate">DeepLearning Ativo</span>
@@ -79,6 +82,3 @@ export const MenuLateral: React.FC<MenuLateralProps> = ({
     </nav>
   );
 };
-
-
-
