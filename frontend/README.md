@@ -1,20 +1,79 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# DermaScan Frontend
 
-# Run and deploy your AI Studio app
+Frontend da aplicação DermaScan desenvolvido com React, Vite e TypeScript.
 
-This contains everything you need to run your app locally.
+## Pré-requisitos
 
-View your app in AI Studio: https://ai.studio/apps/349e1aa9-361e-4783-b104-cd7484f664e4
+Instale:
 
-## Run Locally
+```bash
+Node.js
+npm
+Docker
+```
 
-**Prerequisites:**  Node.js
+## Rodar sem Docker
 
+Entre na pasta do frontend:
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+cd frontend
+```
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Crie o arquivo `.env.local`:
+
+```env
+VITE_API_URL=http://localhost:4000
+```
+
+Execute o frontend:
+
+```bash
+npm run dev
+```
+
+Abra no navegador:
+
+```txt
+http://localhost:5173
+```
+
+## Rodar com Dockerfile
+
+Dentro da pasta `frontend`, crie o arquivo `.env.production`:
+
+```env
+VITE_API_URL=http://localhost:4000
+```
+
+Depois gere a imagem Docker:
+
+```bash
+docker build -t dermascan-frontend .
+```
+
+Execute o container:
+
+```bash
+docker run --rm -p 8080:80 dermascan-frontend
+```
+
+Abra no navegador:
+
+```txt
+http://localhost:8080
+```
+
+## Verificar o projeto
+
+```bash
+npm run typecheck
+npm run lint
+npm run build
+```
