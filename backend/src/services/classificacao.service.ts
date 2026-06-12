@@ -2,7 +2,7 @@ const CLASSES_DERMATOLOGICAS = [
   { classe: "Melanoma", nivelAtencao: "Alto" },
   { classe: "Carcinoma basocelular", nivelAtencao: "Alto" },
   { classe: "Ceratose actínica", nivelAtencao: "Atenção" },
-  { classe: "Nevo melanocítico", nivelAtencao: "Baixo" },
+  { classe: "Nevo melanocitico", nivelAtencao: "Baixo" },
   { classe: "Ceratose benigna", nivelAtencao: "Baixo" },
   { classe: "Dermatofibroma", nivelAtencao: "Baixo" },
   { classe: "Lesão vascular", nivelAtencao: "Baixo" },
@@ -27,7 +27,7 @@ export function obterPredicaoPreset(id: string) {
         { classe: "Melanoma", probabilidade: 0.89 },
         { classe: "Carcinoma basocelular", probabilidade: 0.06 },
         { classe: "Ceratose actínica", probabilidade: 0.03 },
-        { classe: "Nevo melanocítico", probabilidade: 0.01 },
+        { classe: "Nevo melanocitico", probabilidade: 0.01 },
         { classe: "Outros / Benignos", probabilidade: 0.01 },
       ],
     };
@@ -35,11 +35,11 @@ export function obterPredicaoPreset(id: string) {
 
   if (id === "nevo_sample") {
     return {
-      classePrevista: "Nevo melanocítico",
+      classePrevista: "Nevo melanocitico",
       confianca: 0.94,
       nivelAtencao: "Baixo",
       probabilidades: [
-        { classe: "Nevo melanocítico", probabilidade: 0.94 },
+        { classe: "Nevo melanocitico", probabilidade: 0.94 },
         { classe: "Ceratose benigna", probabilidade: 0.03 },
         { classe: "Melanoma", probabilidade: 0.02 },
         { classe: "Dermatofibroma", probabilidade: 0.01 },

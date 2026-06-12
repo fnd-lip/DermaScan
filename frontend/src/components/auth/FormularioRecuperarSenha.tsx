@@ -23,7 +23,7 @@ export const FormularioRecuperarSenha: React.FC<FormularioRecuperarSenhaProps> =
       <CampoFormulario
         label="Seu E-mail Cadastrado"
         tipo="email"
-        placeholder="felipefebl@gmail.com"
+        placeholder="E-mail"
         valor={emailEsquecido}
         carregando={carregando}
         Icone={Mail}
