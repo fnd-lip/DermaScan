@@ -1,13 +1,10 @@
 import React from "react";
 import { BotaoLogoutPerfil } from "../components/profile/BotaoLogoutPerfil";
 import { CabecalhoPerfil } from "../components/profile/CabecalhoPerfil";
-import { PreferenciasPerfil } from "../components/profile/PreferenciasPerfil";
 import { SecoesInformativasPerfil } from "../components/profile/SecoesInformativasPerfil";
 
 interface TelaPerfilProps {
   onRecarregarApp: () => void;
-  salvarAuto: boolean;
-  onToggleSalvarAuto: (valor: boolean) => void;
   historicoCount: number;
   nomeUsuario?: string;
   emailUsuario?: string;
@@ -16,8 +13,6 @@ interface TelaPerfilProps {
 
 export const TelaPerfil: React.FC<TelaPerfilProps> = ({
   onRecarregarApp,
-  salvarAuto,
-  onToggleSalvarAuto,
   historicoCount,
   nomeUsuario = "Usuário",
   emailUsuario = "E-mail não informado",
@@ -29,11 +24,6 @@ export const TelaPerfil: React.FC<TelaPerfilProps> = ({
         nomeUsuario={nomeUsuario}
         emailUsuario={emailUsuario}
         historicoCount={historicoCount}
-      />
-
-      <PreferenciasPerfil
-        salvarAuto={salvarAuto}
-        onToggleSalvarAuto={onToggleSalvarAuto}
       />
 
       <SecoesInformativasPerfil />

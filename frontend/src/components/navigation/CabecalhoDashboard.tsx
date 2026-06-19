@@ -6,12 +6,14 @@ import { obterIniciaisUsuario } from "../../utils/usuario";
 interface CabecalhoDashboardProps {
   usuarioLogado: UsuarioLogado | null;
   onAbrirPerfil?: () => void;
+  onAbrirConfiguracoes?: () => void;
   onSairDaConta?: () => void;
 }
 
 export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
   usuarioLogado,
   onAbrirPerfil,
+  onAbrirConfiguracoes,
   onSairDaConta,
 }) => {
   const [menuAberto, setMenuAberto] = useState(false);
@@ -45,6 +47,11 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
   const handleAbrirPerfil = () => {
     setMenuAberto(false);
     onAbrirPerfil?.();
+  };
+
+  const handleAbrirConfiguracoes = () => {
+    setMenuAberto(false);
+    onAbrirConfiguracoes?.();
   };
 
   const handleSairDaConta = () => {
@@ -117,7 +124,7 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
 
                 <button
                   type="button"
-                  onClick={handleAbrirPerfil}
+                  onClick={handleAbrirConfiguracoes}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                 >
                   <Settings className="w-4 h-4" />

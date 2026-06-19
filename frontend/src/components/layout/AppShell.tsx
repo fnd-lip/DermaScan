@@ -7,6 +7,7 @@ interface AppShellProps {
   mostrarCabecalho: boolean;
   usuarioLogado: UsuarioLogado | null;
   onAbrirPerfil: () => void;
+  onAbrirConfiguracoes?: () => void;
   onSairDaConta: () => void;
 }
 
@@ -15,6 +16,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   mostrarCabecalho,
   usuarioLogado,
   onAbrirPerfil,
+  onAbrirConfiguracoes,
   onSairDaConta,
 }) => {
   return (
@@ -23,6 +25,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         <CabecalhoDashboard
           usuarioLogado={usuarioLogado}
           onAbrirPerfil={onAbrirPerfil}
+          onAbrirConfiguracoes={onAbrirConfiguracoes}
           onSairDaConta={onSairDaConta}
         />
       )}

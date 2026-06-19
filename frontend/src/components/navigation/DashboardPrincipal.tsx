@@ -1,15 +1,16 @@
-﻿import React from 'react';
-import { Predicao } from '../../types/Predicao';
-import { AbaAtiva, FaseAnalise, UsuarioLogado } from '../../app/types/fluxo';
-import { MenuLateral } from './MenuLateral';
-import { TelaInicio } from '../../screens/TelaInicio';
-import { TelaAnalise } from '../../screens/TelaAnalise';
-import { TelaConferirImagem } from '../../screens/TelaConferirImagem';
-import { TelaProcessandoAnalise } from '../../screens/TelaProcessandoAnalise';
-import { TelaResultado } from '../../screens/TelaResultado';
-import { TelaHistorico } from '../../screens/TelaHistorico';
-import { TelaEducacao } from '../../screens/TelaEducacao';
-import { TelaPerfil } from '../../screens/TelaPerfil';
+﻿import React from "react";
+import { Predicao } from "../../types/Predicao";
+import { AbaAtiva, FaseAnalise, UsuarioLogado } from "../../app/types/fluxo";
+import { MenuLateral } from "./MenuLateral";
+import { TelaInicio } from "../../screens/TelaInicio";
+import { TelaAnalise } from "../../screens/TelaAnalise";
+import { TelaConferirImagem } from "../../screens/TelaConferirImagem";
+import { TelaProcessandoAnalise } from "../../screens/TelaProcessandoAnalise";
+import { TelaResultado } from "../../screens/TelaResultado";
+import { TelaHistorico } from "../../screens/TelaHistorico";
+import { TelaEducacao } from "../../screens/TelaEducacao";
+import { TelaPerfil } from "../../screens/TelaPerfil";
+import { TelaConfiguracoes } from "../../screens/TelaConfiguracoes";
 
 interface DashboardPrincipalProps {
   abaAtiva: AbaAtiva;
@@ -75,7 +76,7 @@ export const DashboardPrincipal: React.FC<DashboardPrincipalProps> = ({
 
       <div className="flex-1 bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden flex flex-col h-full relative">
         <div className="flex-1 relative overflow-hidden h-full">
-          {abaAtiva === 'inicio' && (
+          {abaAtiva === "inicio" && (
             <TelaInicio
               onIrParaAnalise={onPrepararAnalise}
               onIrParaHistorico={onIrParaHistorico}
@@ -86,7 +87,7 @@ export const DashboardPrincipal: React.FC<DashboardPrincipalProps> = ({
             />
           )}
 
-          {abaAtiva === 'analise' && (
+          {abaAtiva === "analise" && (
             <TelaAnaliseWorkspace
               faseAnalise={faseAnalise}
               imagemSelecionada={imagemSelecionada}
@@ -101,7 +102,7 @@ export const DashboardPrincipal: React.FC<DashboardPrincipalProps> = ({
             />
           )}
 
-          {abaAtiva === 'historico' && (
+          {abaAtiva === "historico" && (
             <TelaHistorico
               historico={historico}
               onSelecionarItem={onSelecionarHistorico}
@@ -110,17 +111,22 @@ export const DashboardPrincipal: React.FC<DashboardPrincipalProps> = ({
             />
           )}
 
-          {abaAtiva === 'educacao' && <TelaEducacao />}
+          {abaAtiva === "educacao" && <TelaEducacao />}
 
-          {abaAtiva === 'perfil' && (
+          {abaAtiva === "perfil" && (
             <TelaPerfil
               onRecarregarApp={onRecarregarApp}
-              salvarAuto={salvarHistoricoAutomaticamente}
-              onToggleSalvarAuto={onToggleSalvarAuto}
               historicoCount={historico.length}
               nomeUsuario={usuarioLogado?.nome}
               emailUsuario={usuarioLogado?.email}
               onSairDaConta={onSairDaConta}
+            />
+          )}
+
+          {abaAtiva === "configuracoes" && (
+            <TelaConfiguracoes
+              salvarHistoricoAutomaticamente={salvarHistoricoAutomaticamente}
+              onToggleSalvarAuto={onToggleSalvarAuto}
             />
           )}
         </div>
@@ -156,9 +162,11 @@ const TelaAnaliseWorkspace: React.FC<TelaAnaliseWorkspaceProps> = ({
 }) => {
   return (
     <div className="h-full relative overflow-hidden">
-      {faseAnalise === 'upload' && <TelaAnalise onImagemSelecionada={onSelecionarImagem} />}
+      {faseAnalise === "upload" && (
+        <TelaAnalise onImagemSelecionada={onSelecionarImagem} />
+      )}
 
-      {faseAnalise === 'conferir' && (
+      {faseAnalise === "conferir" && (
         <TelaConferirImagem
           imagemUri={imagemSelecionada}
           onVoltar={onVoltarParaUpload}
@@ -167,9 +175,11 @@ const TelaAnaliseWorkspace: React.FC<TelaAnaliseWorkspaceProps> = ({
         />
       )}
 
-      {faseAnalise === 'processando' && <TelaProcessandoAnalise onFinalizarProcessamento={() => {}} />}
+      {faseAnalise === "processando" && (
+        <TelaProcessandoAnalise onFinalizarProcessamento={() => {}} />
+      )}
 
-      {faseAnalise === 'resultado' && predicaoAtiva && (
+      {faseAnalise === "resultado" && predicaoAtiva && (
         <TelaResultado
           predicao={predicaoAtiva}
           imagemUri={imagemSelecionada}
@@ -181,6 +191,3 @@ const TelaAnaliseWorkspace: React.FC<TelaAnaliseWorkspaceProps> = ({
     </div>
   );
 };
-
-
-

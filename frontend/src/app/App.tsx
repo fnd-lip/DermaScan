@@ -12,6 +12,7 @@ export default function App() {
       mostrarCabecalho={estado.faseFluxo === 'abas'}
       usuarioLogado={estado.usuarioLogado}
       onAbrirPerfil={() => acoes.setAbaAtiva('perfil')}
+      onAbrirConfiguracoes={() => acoes.setAbaAtiva('configuracoes')}
       onSairDaConta={acoes.handleSairDaConta}
     >
       {estado.faseFluxo !== 'abas' ? (
