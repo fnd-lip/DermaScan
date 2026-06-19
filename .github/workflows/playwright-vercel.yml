@@ -1,0 +1,37 @@
+name: Playwright Tests
+
+on:
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.success'
+      - 'vercel.deployment.ready'
+  workflow_dispatch:
+
+jobs:
+  run-e2es:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.git.sha || github.sha }}
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        working-directory: frontend
+        run: npx playwright test
+        env:
+          BASE_URL: ${{ github.event.client_payload.url || vars.BASE_URL }}
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 7
