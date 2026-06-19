@@ -40,7 +40,7 @@ export const FormularioLoginCadastro: React.FC<FormularioLoginCadastroProps> = (
     <form onSubmit={onSubmit} className="space-y-4">
       {tipo === 'cadastro' && (
         <CampoFormulario
-          label="Nome Completo do Clínico"
+          label="Nome Completo do Usuário"
           placeholder="Ex: Usuário Demo"
           valor={nome}
           carregando={carregando}
