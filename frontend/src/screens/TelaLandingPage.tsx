@@ -4,11 +4,9 @@ import {
   BrainCircuit,
   CheckCircle2,
   ImagePlus,
-  Lock,
-  ScanSearch,
   Shield,
-  Stethoscope,
 } from "lucide-react";
+import { CenaClassificacaoIA } from "../components/scene/CenaClassificacaoIA";
 
 interface TelaLandingPageProps {
   onAbrirLogin: () => void;
@@ -32,9 +30,7 @@ export const TelaLandingPage: React.FC<TelaLandingPageProps> = ({
             </div>
 
             <div>
-              <h1 className="text-2xl font-black tracking-tight">
-                DermaScan
-              </h1>
+              <h1 className="text-2xl font-black tracking-tight">DermaScan</h1>
 
               <p className="text-[11px] uppercase tracking-[0.25em] text-slate-400 font-mono mt-1">
                 Classificação assistida de lesões
@@ -108,64 +104,7 @@ export const TelaLandingPage: React.FC<TelaLandingPageProps> = ({
 
           <section className="relative">
             <div className="absolute -inset-6 bg-teal-400/10 rounded-full blur-3xl" />
-
-            <div className="relative bg-slate-900/70 border border-white/10 rounded-[2rem] p-6 shadow-2xl shadow-black/30 backdrop-blur-md overflow-hidden">
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(20,184,166,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(20,184,166,0.08)_1px,transparent_1px)] bg-[size:48px_48px]" />
-
-              <div className="relative z-10">
-                <div className="flex items-center justify-between border border-white/10 bg-slate-950/70 rounded-2xl px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse" />
-                    <span className="text-[11px] font-black uppercase tracking-widest text-teal-300 font-mono">
-                      Pipeline de análise
-                    </span>
-                  </div>
-
-                  <span className="text-[10px] font-mono text-slate-400">
-                    CNN / Deep Learning
-                  </span>
-                </div>
-
-                <div className="mt-8 rounded-3xl border border-teal-400/20 bg-slate-950/70 p-6">
-                  <div className="aspect-square max-w-sm mx-auto rounded-full border border-teal-400/20 bg-[radial-gradient(circle,rgba(20,184,166,0.28),rgba(15,23,42,0.1)_45%,transparent_70%)] flex items-center justify-center relative">
-                    <div className="absolute inset-8 rounded-full border border-dashed border-teal-300/30 animate-spin" />
-                    <div className="absolute inset-16 rounded-full border border-indigo-300/20" />
-
-                    <div className="w-32 h-32 rounded-3xl bg-teal-400/10 border border-teal-300/30 flex items-center justify-center shadow-xl shadow-teal-500/10">
-                      <ScanSearch className="w-16 h-16 text-teal-300" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-5 grid grid-cols-2 gap-3">
-                  <InfoPainel
-                    rotulo="Confiança"
-                    valor="0.94"
-                    descricao="Escala probabilística"
-                  />
-
-                  <InfoPainel
-                    rotulo="Atenção"
-                    valor="Baixo"
-                    descricao="Nível estimado"
-                  />
-                </div>
-
-                <div className="mt-5 rounded-2xl bg-amber-400/10 border border-amber-300/20 p-4 flex gap-3">
-                  <Stethoscope className="w-5 h-5 text-amber-300 shrink-0 mt-0.5" />
-
-                  <p className="text-xs leading-relaxed text-amber-50/90">
-                    O resultado é informativo e não substitui avaliação médica
-                    presencial.
-                  </p>
-                </div>
-
-                <div className="mt-5 flex items-center gap-2 text-xs text-slate-400">
-                  <Lock className="w-4 h-4 text-teal-300" />
-                  Sessão protegida e histórico vinculado ao usuário autenticado.
-                </div>
-              </div>
-            </div>
+            <CenaClassificacaoIA />
           </section>
         </main>
       </div>
