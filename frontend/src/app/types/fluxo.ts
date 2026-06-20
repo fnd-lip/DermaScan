@@ -1,6 +1,6 @@
 ﻿import { Predicao } from '../../types/Predicao';
 
-export type FaseFluxo = 'login' | 'cadastro' | 'onboarding' | 'aviso_medico' | 'abas';
+export type FaseFluxo = | 'landing' | 'login' | 'cadastro' | 'onboarding' | 'aviso_medico' | 'abas';
 export type AbaAtiva = 'inicio' | 'analise' | 'historico' | 'educacao' | 'perfil' | 'configuracoes';
 export type FaseAnalise = 'upload' | 'conferir' | 'processando' | 'resultado';
 export type TipoLog = 'info' | 'sucesso' | 'erro' | 'ia';

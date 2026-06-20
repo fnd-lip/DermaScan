@@ -18,6 +18,9 @@ export default function App() {
       {estado.faseFluxo !== 'abas' ? (
         <FluxoAutenticacao
           faseFluxo={estado.faseFluxo}
+          onAbrirLogin={() => acoes.setFaseFluxo('login')}
+          onAbrirCadastro={() => acoes.setFaseFluxo('cadastro')}
+          onVoltarLanding={() => acoes.setFaseFluxo('landing')}
           onLoginSucesso={acoes.handleLoginSucesso}
           onCadastroSucesso={acoes.handleCadastroSucesso}
           onFinalizarOnboarding={acoes.handleFinalizarOnboarding}

@@ -16,7 +16,7 @@ export function useSessaoUsuario({
   adicionarLog,
   carregarHistoricoDoBackend,
 }: UseSessaoUsuarioParams) {
-  const [faseFluxo, setFaseFluxo] = useState<FaseFluxo>("login");
+  const [faseFluxo, setFaseFluxo] = useState<FaseFluxo>("landing");
   const [usuarioLogado, setUsuarioLogado] = useState<UsuarioLogado | null>(
     null,
   );
@@ -26,7 +26,7 @@ export function useSessaoUsuario({
 
   const resetarSessaoLocal = useCallback(() => {
     setUsuarioLogado(null);
-    setFaseFluxo("login");
+    setFaseFluxo("landing");
     setAbaAtiva("inicio");
   }, []);
 
