@@ -12,8 +12,6 @@ interface AvatarAssistenteVRMProps {
   caminhoModelo: string;
 }
 
-type StatusModelo = "verificando" | "indisponivel" | "disponivel";
-
 /*
   Ajustes principais do avatar.
 
@@ -35,60 +33,13 @@ const ROTACAO_BASE_AVATAR = Math.PI + 0.55;
 
 const INTENSIDADE_FLUTUACAO = 0.035;
 const INTENSIDADE_ROTACAO = 0.08;
-
-/*
-  Movimento horizontal.
-*/
 const INTENSIDADE_MOVIMENTO_LATERAL = 0.16;
 
 export const AvatarAssistenteVRM: React.FC<AvatarAssistenteVRMProps> = ({
   caminhoModelo,
 }) => {
-  const [statusModelo, setStatusModelo] =
-    useState<StatusModelo>("verificando");
-
-  useEffect(() => {
-    let componenteAtivo = true;
-
-    async function verificarModelo() {
-      try {
-        const resposta = await fetch(caminhoModelo, {
-          method: "HEAD",
-          cache: "no-store",
-        });
-
-        if (!componenteAtivo) return;
-
-        const tamanhoArquivo = Number(
-          resposta.headers.get("content-length") ?? "0",
-        );
-
-        const modeloExisteEnaoEstaVazio =
-          resposta.ok && tamanhoArquivo > 1024;
-
-        setStatusModelo(
-          modeloExisteEnaoEstaVazio ? "disponivel" : "indisponivel",
-        );
-      } catch {
-        if (!componenteAtivo) return;
-
-        setStatusModelo("indisponivel");
-      }
-    }
-
-    void verificarModelo();
-
-    return () => {
-      componenteAtivo = false;
-    };
-  }, [caminhoModelo]);
-
-  if (statusModelo !== "disponivel") {
-    return null;
-  }
-
   /*
-    O key força o React a recriar o componente quando o modelo mudar
+    O carregamento real fica por conta do GLTFLoader
   */
   return (
     <ModeloVRMSeguro
@@ -128,6 +79,7 @@ function ModeloVRMSeguro({ caminhoModelo }: ModeloVRMProps) {
           .userData.vrm;
 
         if (!modeloVrm) {
+          console.warn("Arquivo carregado, mas nenhum VRM foi encontrado.");
           setFalhouAoCarregar(true);
           return;
         }
@@ -142,9 +94,10 @@ function ModeloVRMSeguro({ caminhoModelo }: ModeloVRMProps) {
         setVrm(modeloVrm);
       },
       undefined,
-      () => {
+      (erro) => {
         if (!componenteAtivo) return;
 
+        console.warn("Falha ao carregar o modelo VRM:", caminhoModelo, erro);
         setFalhouAoCarregar(true);
       },
     );
