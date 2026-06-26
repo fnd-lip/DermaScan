@@ -177,11 +177,11 @@ export const CenaClassificacaoIA: React.FC = () => {
           </span>
 
           <h3 className="mt-4 max-w-sm text-2xl font-black leading-tight text-white">
-            ClassificaÃ§Ã£o visual em tempo real
+            Classificação visual em tempo real
           </h3>
 
           <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-400">
-            RepresentaÃ§Ã£o do processo de leitura da imagem, extraÃ§Ã£o de padrÃµes
+            Representação do processo de leitura da imagem, extração de padrões
             e estimativa de resultado.
           </p>
         </div>
@@ -209,8 +209,8 @@ export const CenaClassificacaoIA: React.FC = () => {
         />
 
         <IndicadorCena
-          titulo="PadrÃµes"
-          valor="ExtraÃ­dos"
+          titulo="Padrões"
+          valor="Extraídos"
           icone={<BrainCircuit className="w-4 h-4" />}
         />
 
