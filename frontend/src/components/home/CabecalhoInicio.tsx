@@ -1,27 +1,28 @@
-import React from 'react';
+import React from "react";
 
 interface CabecalhoInicioProps {
   nomeUsuario?: string;
 }
 
 export const CabecalhoInicio: React.FC<CabecalhoInicioProps> = ({
-  nomeUsuario = 'Usuário',
+  nomeUsuario = "Usuário",
 }) => {
-  const primeiroNome = nomeUsuario.split(' ')[0];
+  const primeiroNome = nomeUsuario.split(" ")[0];
 
   return (
-    <div>
-      <h4 className="text-xs text-teal-600 font-bold uppercase tracking-wider">
-        Painel Clínico
-      </h4>
+    <header className="flex flex-col gap-1.5">
+      <span className="text-xs font-black uppercase tracking-[0.18em] text-teal-700">
+        Área do usuário
+      </span>
 
-      <h2 className="text-xl font-bold text-gray-900 mt-1">
+      <h1 className="text-2xl font-black tracking-tight text-slate-950 lg:text-3xl">
         Olá, {primeiroNome}.
-      </h2>
+      </h1>
 
-      <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-        Vamos classificar uma lesão dermatológica hoje?
+      <p className="text-sm leading-6 text-slate-600">
+        Inicie uma análise visual de lesão dermatológica ou consulte seus
+        resultados salvos.
       </p>
-    </div>
+    </header>
   );
 };

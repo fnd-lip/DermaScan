@@ -12,7 +12,7 @@ const etapasProcessamento = [
     icone: <Search className="w-5 h-5 text-teal-500" />,
   },
   {
-    label: "Executando modelo de Deep Learning (CNN)...",
+    label: "Executando análise assistida por IA...",
     icone: <Cpu className="w-5 h-5 text-indigo-500" />,
   },
   {
@@ -21,9 +21,9 @@ const etapasProcessamento = [
   },
 ];
 
-export const TelaProcessandoAnalise: React.FC<
-  TelaProcessandoAnaliseProps
-> = ({ onFinalizarProcessamento }) => {
+export const TelaProcessandoAnalise: React.FC<TelaProcessandoAnaliseProps> = ({
+  onFinalizarProcessamento,
+}) => {
   const [etapa, setEtapa] = useState(0);
   const [progresso, setProgresso] = useState(0);
 
@@ -69,7 +69,7 @@ export const TelaProcessandoAnalise: React.FC<
   }, [progresso, onFinalizarProcessamento]);
 
   return (
-    <div className="flex flex-col items-center justify-between h-full bg-slate-950 text-white p-6 justify-center text-center font-sans select-none">
+    <div className="flex flex-col items-center justify-center h-full bg-slate-950 text-white p-6 text-center font-sans select-none">
       <div />
 
       <div className="flex flex-col items-center gap-6">
@@ -93,7 +93,7 @@ export const TelaProcessandoAnalise: React.FC<
           </p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl min-w-[260px] max-w-xs flex items-center gap-3 shadow-md">
+        <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl min-w-65 max-w-xs flex items-center gap-3 shadow-md">
           <div className="animate-spin shrink-0">
             <RefreshCw className="w-4 h-4 text-teal-400" />
           </div>
@@ -129,3 +129,5 @@ export const TelaProcessandoAnalise: React.FC<
     </div>
   );
 };
+
+

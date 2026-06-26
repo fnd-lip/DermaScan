@@ -23,21 +23,23 @@ export const TelaInicio: React.FC<TelaInicioProps> = ({
   nomeUsuario = "Felipe",
 }) => {
   return (
-    <div className="flex flex-col h-full bg-slate-50 text-gray-800 p-5 overflow-y-auto space-y-5 font-sans pb-20 select-none">
-      <CabecalhoInicio nomeUsuario={nomeUsuario} />
+    <div className="flex h-full flex-col overflow-y-auto bg-transparent px-5 py-5 text-slate-900 lg:px-6 lg:py-6">
+      <div className="flex w-full flex-col gap-5 pb-10">
+        <CabecalhoInicio nomeUsuario={nomeUsuario} />
 
-      <CardNovaAnalise onIrParaAnalise={onIrParaAnalise} />
+        <CardNovaAnalise onIrParaAnalise={onIrParaAnalise} />
 
-      <CardUltimaAnalise
-        ultimaAnalise={ultimaAnalise}
-        onVerDetalhesUltima={onVerDetalhesUltima}
-        onIrParaAnalise={onIrParaAnalise}
-      />
+        <CardUltimaAnalise
+          ultimaAnalise={ultimaAnalise}
+          onVerDetalhesUltima={onVerDetalhesUltima}
+          onIrParaAnalise={onIrParaAnalise}
+        />
 
-      <AtalhosInicio
-        onIrParaHistorico={onIrParaHistorico}
-        onIrParaEducacao={onIrParaEducacao}
-      />
+        <AtalhosInicio
+          onIrParaHistorico={onIrParaHistorico}
+          onIrParaEducacao={onIrParaEducacao}
+        />
+      </div>
     </div>
   );
 };

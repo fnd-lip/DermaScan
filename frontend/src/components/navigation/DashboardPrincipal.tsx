@@ -66,7 +66,7 @@ export const DashboardPrincipal: React.FC<DashboardPrincipalProps> = ({
   onSairDaConta,
 }) => {
   return (
-    <div className="flex-1 flex flex-col lg:flex-row gap-6 h-full overflow-hidden">
+    <div className="flex h-full min-h-0 flex-1 flex-col gap-4 overflow-hidden lg:flex-row">
       <MenuLateral
         abaAtiva={abaAtiva}
         usuarioLogado={usuarioLogado}
@@ -74,8 +74,8 @@ export const DashboardPrincipal: React.FC<DashboardPrincipalProps> = ({
         onPrepararAnalise={onPrepararAnalise}
       />
 
-      <div className="flex-1 bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden flex flex-col h-full relative">
-        <div className="flex-1 relative overflow-hidden h-full">
+      <section className="min-h-0 flex-1 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm">
+        <div className="h-full min-h-0 overflow-hidden">
           {abaAtiva === "inicio" && (
             <TelaInicio
               onIrParaAnalise={onPrepararAnalise}
@@ -130,7 +130,7 @@ export const DashboardPrincipal: React.FC<DashboardPrincipalProps> = ({
             />
           )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };
@@ -161,7 +161,7 @@ const TelaAnaliseWorkspace: React.FC<TelaAnaliseWorkspaceProps> = ({
   onSalvarNoHistorico,
 }) => {
   return (
-    <div className="h-full relative overflow-hidden">
+    <div className="relative h-full overflow-hidden">
       {faseAnalise === "upload" && (
         <TelaAnalise onImagemSelecionada={onSelecionarImagem} />
       )}

@@ -1,8 +1,8 @@
-import React from 'react';
-import { AlertCircle, Calendar } from 'lucide-react';
-import { Predicao } from '../../types/Predicao';
-import { formatarPorcentagem } from '../../utils/formatarPorcentagem';
-import { obterEstiloRisco } from '../../utils/nivelDeRisco';
+import React from "react";
+import { AlertCircle, Calendar, ChevronRight } from "lucide-react";
+import { Predicao } from "../../types/Predicao";
+import { formatarPorcentagem } from "../../utils/formatarPorcentagem";
+import { obterEstiloRisco } from "../../utils/nivelDeRisco";
 
 interface CardUltimaAnaliseProps {
   ultimaAnalise: Predicao | null;
@@ -20,80 +20,85 @@ export const CardUltimaAnalise: React.FC<CardUltimaAnaliseProps> = ({
     : null;
 
   return (
-    <div>
-      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-2.5">
-        Última Análise Realizada
-      </h3>
+    <section>
+      <h2 className="mb-2.5 text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+        Última análise realizada
+      </h2>
 
       {ultimaAnalise ? (
-        <div
+        <button
+          type="button"
           onClick={() => onVerDetalhesUltima(ultimaAnalise)}
-          className="bg-white border border-gray-100 rounded-2xl p-3.5 flex gap-3 items-center hover:border-teal-200 shadow-sm transition-all duration-200 cursor-pointer group"
+          className="group flex w-full items-center gap-4 rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-teal-200 hover:shadow-lg hover:shadow-teal-900/10"
         >
-          <div className="w-14 h-14 bg-slate-100 rounded-xl border border-gray-100 overflow-hidden relative shrink-0">
+          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
             {ultimaAnalise.imagemUri ? (
               <img
                 src={ultimaAnalise.imagemUri}
                 alt="Lesão anterior"
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <div className="w-full h-full bg-teal-50 flex items-center justify-center text-teal-700 font-bold text-xs">
+              <div className="flex h-full w-full items-center justify-center bg-teal-50 text-sm font-black text-teal-700">
                 DS
               </div>
             )}
           </div>
 
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-1">
-              <span className="text-xs font-bold text-gray-800 truncate block">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="truncate text-base font-black text-slate-900">
                 {ultimaAnalise.classePrevista}
-              </span>
+              </h3>
 
               <span
-                className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${estiloRisco?.badge}`}
+                className={`rounded-full px-2 py-0.5 text-[11px] font-black ${estiloRisco?.badge}`}
               >
                 {ultimaAnalise.nivelAtencao}
               </span>
             </div>
 
-            <div className="flex items-center gap-3.5 text-[11px] text-gray-400 mt-1">
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
               <span>
-                Confiança:{' '}
-                <strong className="font-mono text-gray-600 font-bold">
+                Confiança:{" "}
+                <strong className="font-mono font-black text-slate-800">
                   {formatarPorcentagem(ultimaAnalise.confianca)}
                 </strong>
               </span>
 
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                {ultimaAnalise.dataAnalise || 'Hoje'}
+              <span className="inline-flex items-center gap-1">
+                <Calendar className="h-3.5 w-3.5" />
+                {ultimaAnalise.dataAnalise || "Hoje"}
               </span>
             </div>
           </div>
-        </div>
+
+          <ChevronRight className="h-5 w-5 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-teal-600" />
+        </button>
       ) : (
-        <div className="border border-dashed border-gray-250 bg-gray-50 rounded-2xl p-5 text-center flex flex-col items-center justify-center gap-1.5">
-          <AlertCircle className="w-6 h-6 text-gray-400 mb-1" />
+        <div className="rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-sm">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+            <AlertCircle className="h-6 w-6" />
+          </div>
 
-          <p className="text-xs font-semibold text-gray-500">
+          <h3 className="mt-4 text-base font-black text-slate-800">
             Nenhuma análise anterior registrada
-          </p>
+          </h3>
 
-          <p className="text-[10px] text-gray-400 leading-relaxed px-4">
+          <p className="mx-auto mt-1.5 max-w-md text-sm leading-6 text-slate-500">
             Faça sua primeira análise para acompanhar os resultados por aqui.
           </p>
 
           <button
             type="button"
             onClick={onIrParaAnalise}
-            className="mt-1 text-[11px] font-bold text-teal-700 hover:text-teal-800"
+            className="mt-4 inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-black text-teal-700 transition hover:bg-teal-50 hover:text-teal-900"
           >
             Começar agora
           </button>
         </div>
       )}
-    </div>
+    </section>
   );
 };

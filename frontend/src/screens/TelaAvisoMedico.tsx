@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { ShieldAlert, CheckCircle } from 'lucide-react';
-import { BotaoPrincipal } from '../components/ui/BotaoPrincipal';
+import React, { useState } from "react";
+import { ShieldAlert, CheckCircle } from "lucide-react";
+import { BotaoPrincipal } from "../components/ui/BotaoPrincipal";
 
 interface TelaAvisoMedicoProps {
   onAceitarAviso: () => void;
 }
 
-export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({ onAceitarAviso }) => {
+export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({
+  onAceitarAviso,
+}) => {
   const [concordado, setConcordado] = useState(false);
 
   return (
@@ -20,29 +22,49 @@ export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({ onAceitarAviso
             <h2 className="text-base font-bold text-gray-900 uppercase tracking-wide">
               Aviso Médico Obrigatório
             </h2>
-            <p className="text-[10px] text-gray-500 font-medium">Fins Educacionais e Estatísticos</p>
+            <p className="text-[10px] text-gray-500 font-medium">
+              Fins Educacionais e Estatísticos
+            </p>
           </div>
         </div>
 
         <div className="mt-4 border border-gray-100 rounded-2xl bg-slate-50 p-4 max-h-75 overflow-y-auto space-y-3.5 shadow-inner">
           <p className="text-xs font-semibold text-gray-800 leading-relaxed">
-            Por favor, leia atentamente as declarações abaixo antes de utilizar a inteligência artificial do aplicativo:
+            Por favor, leia atentamente as declarações abaixo antes de utilizar
+            a inteligência artificial do aplicativo:
           </p>
 
           <div className="space-y-3 text-xs leading-relaxed text-gray-600">
             <div className="p-2.5 bg-white rounded-lg border border-gray-200">
-              <strong className="text-gray-900 block mb-1 font-bold">1. Não é um diagnóstico</strong>
-              Este aplicativo utiliza um algoritmo computacional treinado por Deep Learning para analisar imagens de lesões de pele. <strong>Ele não realiza diagnósticos médicos e não detecta doenças de forma definitiva.</strong>
+              <strong className="text-gray-900 block mb-1 font-bold">
+                1. Não é um diagnóstico
+              </strong>
+
+              <span className="text-gray-700 leading-relaxed">
+                Este aplicativo utiliza inteligência artificial para analisar
+                imagens de lesões de pele.{" "}
+                <strong>
+                  Ele não realiza diagnósticos médicos e não detecta doenças de
+                  forma definitiva.
+                </strong>
+              </span>
+            </div>
+            
+            <div className="p-2.5 bg-white rounded-lg border border-gray-200">
+              <strong className="text-gray-900 block mb-1 font-bold">
+                2. Classificação Estatística
+              </strong>
+              As respostas mostradas indicam qual a maior probabilidade
+              estatística de analogia visual conforme dados de treino. O
+              resultado é meramente educacional e preliminar.
             </div>
 
             <div className="p-2.5 bg-white rounded-lg border border-gray-200">
-              <strong className="text-gray-900 block mb-1 font-bold">2. Classificação Estatística</strong>
-              As respostas mostradas indicam qual a maior probabilidade estatística de analogia visual conforme dados de treino. O resultado é meramente educacional e preliminar.
-            </div>
-
-            <div className="p-2.5 bg-white rounded-lg border border-gray-200">
-              <strong className="text-gray-900 block mb-1 font-bold">3. Sinais de Alerta Críticos</strong>
-              Recomenda-se procurar assistência clínica imediatamente se notar os seguintes sintomas na lesão dermatológica:
+              <strong className="text-gray-900 block mb-1 font-bold">
+                3. Sinais de Alerta Críticos
+              </strong>
+              Recomenda-se procurar assistência clínica imediatamente se notar
+              os seguintes sintomas na lesão dermatológica:
               <ul className="list-disc pl-4 mt-2 space-y-1 text-gray-700">
                 <li>Crescimento rápido ou expansão do tamanho</li>
                 <li>Mudanças de cor ou múltiplos matizes</li>
@@ -64,7 +86,8 @@ export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({ onAceitarAviso
             className="w-5 h-5 text-teal-600 bg-gray-150 border-gray-300 rounded focus:ring-teal-500 focus:ring-2 mt-0.5"
           />
           <span className="text-xs font-medium text-gray-700 leading-snug">
-            Li e compreendi que este aplicativo não substitui avaliação médica profissional.
+            Li e compreendi que este aplicativo não substitui avaliação médica
+            profissional.
           </span>
         </label>
 
@@ -79,6 +102,3 @@ export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({ onAceitarAviso
     </div>
   );
 };
-
-
-

@@ -1,37 +1,45 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Camera, Stethoscope } from 'lucide-react';
-import { BotaoPrincipal } from '../components/ui/BotaoPrincipal';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Shield, Camera, Stethoscope } from "lucide-react";
+import { BotaoPrincipal } from "../components/ui/BotaoPrincipal";
 
 interface TelaDeApresentacaoProps {
   onFinalizarOnboarding: () => void;
 }
 
-export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({ onFinalizarOnboarding }) => {
+export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
+  onFinalizarOnboarding,
+}) => {
   const [slideAtual, setSlideAtual] = useState(0);
 
   const slides = [
     {
       titulo: "Captura de Imagem",
-      descricao: "Tire uma foto ou envie uma imagem da galeria para iniciar a análise da lesão dermatológica.",
-      detalhes: "O sistema aceita capturas em tempo-real ou fotos antigas guardadas no seu rolo de câmera.",
+      descricao:
+        "Tire uma foto ou envie uma imagem da galeria para iniciar a análise da lesão dermatológica.",
+      detalhes:
+        "O sistema aceita capturas em tempo-real ou fotos antigas guardadas no seu rolo de câmera.",
       icone: <Camera className="w-10 h-10 text-teal-600" />,
-      tituloBotao: "Avançar"
+      tituloBotao: "Avançar",
     },
     {
-      titulo: "Modelo Deep Learning",
-      descricao: "O aplicativo utiliza técnicas de Deep Learning para classificar imagens de pele com base em padrões visuais.",
-      detalhes: "Nosso algoritmo de rede neural convolucional de última geração analisa minúcias e distribuições cromáticas celulares na superfície da lesão.",
+      titulo: "Análise assistida por IA",
+      descricao:
+        "O aplicativo utiliza inteligência artificial para classificar imagens de pele com base em padrões visuais.",
+      detalhes:
+        "A inteligência artificial analisa características visuais da lesão para estimar uma possível classificação.",
       icone: <Shield className="w-10 h-10 text-teal-600" />,
-      tituloBotao: "Entendi"
+      tituloBotao: "Entendi",
     },
     {
       titulo: "Aviso Profissional",
-      descricao: "Este aplicativo não substitui uma consulta médica. Em caso de dúvida, procure um dermatologista.",
-      detalhes: "As classificações geradas por inteligência artificial são apenas estimativas estatísticas para apoiar o aprendizado acadêmico.",
+      descricao:
+        "Este aplicativo não substitui uma consulta médica. Em caso de dúvida, procure um dermatologista.",
+      detalhes:
+        "As classificações geradas por inteligência artificial são apenas estimativas estatísticas para apoiar o aprendizado acadêmico.",
       icone: <Stethoscope className="w-10 h-10 text-teal-600" />,
-      tituloBotao: "Começar"
-    }
+      tituloBotao: "Começar",
+    },
   ];
 
   const handleProximo = () => {
@@ -112,7 +120,7 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({ onFinali
               key={index}
               onClick={() => setSlideAtual(index)}
               className={`h-2 rounded-full transition-all duration-300 ${
-                index === slideAtual ? 'w-6 bg-teal-600' : 'w-2 bg-gray-300'
+                index === slideAtual ? "w-6 bg-teal-600" : "w-2 bg-gray-300"
               }`}
             />
           ))}
@@ -128,6 +136,3 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({ onFinali
     </div>
   );
 };
-
-
-

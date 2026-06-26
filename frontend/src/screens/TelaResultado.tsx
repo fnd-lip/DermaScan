@@ -88,7 +88,7 @@ export const TelaResultado: React.FC<TelaResultadoProps> = ({
 
   const detalhesClasse = DESCRICOES_CLASSES[predicao.classePrevista] || {
     sintomas: "Lesão dermatológica registrada.",
-    acao: "Consulte um especialista clínico para dirimir dúvidas.",
+    acao: "Consulte um dermatologista ou profissional de saúde em caso de dúvidas.",
     detalhe: "Sem descrição específica.",
   };
 

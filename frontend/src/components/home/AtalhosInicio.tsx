@@ -1,5 +1,5 @@
-import React from 'react';
-import { BookOpen, History } from 'lucide-react';
+import React from "react";
+import { BookOpen, History } from "lucide-react";
 
 interface AtalhosInicioProps {
   onIrParaHistorico: () => void;
@@ -11,46 +11,46 @@ export const AtalhosInicio: React.FC<AtalhosInicioProps> = ({
   onIrParaEducacao,
 }) => {
   return (
-    <div>
-      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-2.5">
-        Atalhos Rápidos
-      </h3>
+    <section>
+      <h2 className="mb-2.5 text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+        Atalhos rápidos
+      </h2>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid gap-3 md:grid-cols-2">
         <button
           onClick={onIrParaHistorico}
-          className="bg-white hover:bg-slate-50 border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center gap-2 group transition-all duration-200 active:scale-[0.98] shadow-xs"
+          className="group rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-teal-200 hover:shadow-lg hover:shadow-teal-900/10 active:scale-[0.99]"
         >
-          <div className="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center group-hover:bg-teal-100 transition-colors">
-            <History className="w-5 h-5" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 transition group-hover:bg-teal-600 group-hover:text-white">
+            <History className="h-5 w-5" />
           </div>
 
-          <span className="text-xs font-bold text-gray-700">
-            Ver Histórico
-          </span>
+          <h3 className="mt-4 text-base font-black text-slate-900">
+            Ver histórico
+          </h3>
 
-          <p className="text-[10px] text-gray-400">
-            Suas análises salvas
+          <p className="mt-1.5 text-sm leading-6 text-slate-500">
+            Consulte suas análises salvas e acompanhe laudos anteriores.
           </p>
         </button>
 
         <button
           onClick={onIrParaEducacao}
-          className="bg-white hover:bg-slate-50 border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center gap-2 group transition-all duration-200 active:scale-[0.98] shadow-xs"
+          className="group rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-900/10 active:scale-[0.99]"
         >
-          <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
-            <BookOpen className="w-5 h-5" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-700 transition group-hover:bg-indigo-600 group-hover:text-white">
+            <BookOpen className="h-5 w-5" />
           </div>
 
-          <span className="text-xs font-bold text-gray-700">
-            Aprender Guia
-          </span>
+          <h3 className="mt-4 text-base font-black text-slate-900">
+            Guia educativo ABCDE
+          </h3>
 
-          <p className="text-[10px] text-gray-400">
-            Regra ABCDE e mais
+          <p className="mt-1.5 text-sm leading-6 text-slate-500">
+            Revise critérios educativos para reconhecer sinais de atenção.
           </p>
         </button>
       </div>
-    </div>
+    </section>
   );
 };

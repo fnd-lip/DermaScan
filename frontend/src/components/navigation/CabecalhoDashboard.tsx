@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LogOut, Settings, Shield, User } from "lucide-react";
-import { UsuarioLogado } from "../../app/types/fluxo";
+import type { UsuarioLogado } from "../../app/types/fluxo";
 import { obterIniciaisUsuario } from "../../utils/usuario";
 
 interface CabecalhoDashboardProps {
@@ -60,34 +60,37 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
   };
 
   return (
-    <header className="bg-white px-8 py-4.5 border-b border-slate-200/80 flex justify-between items-center shrink-0">
+    <header className="flex h-19 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-6">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-teal-200">
-          <Shield className="w-5 h-5 text-white animate-pulse" />
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-teal-600 text-white shadow-lg shadow-teal-600/20">
+          <Shield className="h-5 w-5" />
         </div>
+
         <div>
-          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-xl font-black tracking-tight text-slate-950">
             DermaScan
           </h1>
-          <p className="text-xs text-slate-500 font-medium">
-            Classificação de Lesões Dermatológicas via Deep Learning
+
+          <p className="text-xs font-medium text-slate-500">
+            Classificação assistida de lesões dermatológicas
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="text-right hidden sm:block">
-          <span className="text-[10px] uppercase font-bold text-teal-600 tracking-wider">
-            Painel Clínico
+      <div className="flex items-center gap-3">
+        <div className="hidden text-right sm:block">
+          <span className="text-[10px] font-black uppercase tracking-[0.18em] text-teal-700">
+            Área do usuário
           </span>
-          <p className="text-xs font-bold text-slate-850">{nomeUsuario}</p>
+
+          <p className="text-sm font-black text-slate-900">{nomeUsuario}</p>
         </div>
 
         <div className="relative" ref={menuRef}>
           <button
             type="button"
             onClick={() => setMenuAberto((aberto) => !aberto)}
-            className="w-10 h-10 bg-teal-50 rounded-xl border border-teal-250 flex items-center justify-center text-teal-700 font-bold font-mono text-xs hover:bg-teal-100 transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-teal-200 bg-teal-50 text-xs font-black text-teal-800 transition hover:bg-teal-100"
             aria-label="Abrir menu do usuário"
             aria-expanded={menuAberto}
           >
@@ -95,50 +98,54 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
           </button>
 
           {menuAberto && (
-            <div className="absolute right-0 top-12 w-72 bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-200/70 p-3 z-50">
-              <div className="px-3 py-3 border-b border-slate-100">
+            <div className="absolute right-0 top-14 z-50 w-72 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-300/50">
+              <div className="border-b border-slate-100 px-3 py-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-teal-600 flex items-center justify-center text-white text-xs font-black font-mono">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-600 text-xs font-black text-white">
                     {obterIniciaisUsuario(nomeUsuario)}
                   </div>
+
                   <div className="min-w-0">
-                    <p className="text-sm font-extrabold text-slate-850 truncate">
+                    <p className="truncate text-sm font-black text-slate-900">
                       {nomeUsuario}
                     </p>
-                    <p className="text-xs text-slate-500 truncate">
+
+                    <p className="truncate text-xs text-slate-500">
                       {emailUsuario}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="py-2 space-y-1">
+              <div className="space-y-1 py-2">
                 <button
                   type="button"
                   onClick={handleAbrirPerfil}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                  className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
                 >
-                  <User className="w-4 h-4" />
+                  <User className="h-4 w-4" />
                   Meu perfil
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleAbrirConfiguracoes}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-                >
-                  <Settings className="w-4 h-4" />
-                  Configurações
-                </button>
+                {onAbrirConfiguracoes && (
+                  <button
+                    type="button"
+                    onClick={handleAbrirConfiguracoes}
+                    className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Configurações
+                  </button>
+                )}
               </div>
 
-              <div className="pt-2 border-t border-slate-100">
+              <div className="border-t border-slate-100 pt-2">
                 <button
                   type="button"
                   onClick={handleSairDaConta}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-bold text-red-600 hover:bg-red-50 transition-colors"
+                  className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-bold text-red-600 transition hover:bg-red-50"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="h-4 w-4" />
                   Sair da conta
                 </button>
               </div>
@@ -149,3 +156,4 @@ export const CabecalhoDashboard: React.FC<CabecalhoDashboardProps> = ({
     </header>
   );
 };
+
