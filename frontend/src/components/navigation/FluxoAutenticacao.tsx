@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { AnimatePresence } from 'motion/react';
 import { FaseFluxo } from '../../app/types/fluxo';
 import { FluxoCentralizado } from '../layout/FluxoCentralizado';
@@ -62,7 +62,7 @@ export const FluxoAutenticacao: React.FC<FluxoAutenticacaoProps> = ({
       {faseFluxo === 'onboarding' && (
         <FluxoCentralizado
           key="onboarding"
-          className="max-w-xl min-h-[520px] bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 flex flex-col"
+          className="max-w-xl min-h-130 bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 flex flex-col"
         >
           <TelaDeApresentacao onFinalizarOnboarding={onFinalizarOnboarding} />
         </FluxoCentralizado>
@@ -71,7 +71,7 @@ export const FluxoAutenticacao: React.FC<FluxoAutenticacaoProps> = ({
       {faseFluxo === 'aviso_medico' && (
         <FluxoCentralizado
           key="aviso_medico"
-          className="max-w-xl min-h-[540px] bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 flex flex-col"
+          className="max-w-xl min-h-135 bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 flex flex-col"
         >
           <TelaAvisoMedico onAceitarAviso={onAceitarAvisoMedico} />
         </FluxoCentralizado>

@@ -165,7 +165,7 @@ function Cena3D() {
 
 export const CenaClassificacaoIA: React.FC = () => {
   return (
-    <div className="relative bg-slate-900/70 border border-white/10 rounded-[2rem] p-6 shadow-2xl shadow-black/30 backdrop-blur-md overflow-hidden min-h-[620px]">
+    <div className="relative bg-slate-900/70 border border-white/10 rounded-[2rem] p-6 shadow-2xl shadow-black/30 backdrop-blur-md overflow-hidden min-h-155">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(20,184,166,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(20,184,166,0.08)_1px,transparent_1px)] bg-[size:48px_48px]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.14),transparent_58%)]" />
 
@@ -177,11 +177,11 @@ export const CenaClassificacaoIA: React.FC = () => {
           </span>
 
           <h3 className="mt-4 max-w-sm text-2xl font-black leading-tight text-white">
-            Classificação visual em tempo real
+            ClassificaÃ§Ã£o visual em tempo real
           </h3>
 
           <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-400">
-            Representação do processo de leitura da imagem, extração de padrões
+            RepresentaÃ§Ã£o do processo de leitura da imagem, extraÃ§Ã£o de padrÃµes
             e estimativa de resultado.
           </p>
         </div>
@@ -209,8 +209,8 @@ export const CenaClassificacaoIA: React.FC = () => {
         />
 
         <IndicadorCena
-          titulo="Padrões"
-          valor="Extraídos"
+          titulo="PadrÃµes"
+          valor="ExtraÃ­dos"
           icone={<BrainCircuit className="w-4 h-4" />}
         />
 

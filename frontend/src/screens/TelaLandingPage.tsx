@@ -22,7 +22,7 @@ export const TelaLandingPage: React.FC<TelaLandingPageProps> = ({
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_18%,rgba(20,184,166,0.18),transparent_34%),radial-gradient(circle_at_85%_28%,rgba(99,102,241,0.16),transparent_32%)]" />
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-950/35 to-slate-950" />
 
-      <div className="relative z-10 w-full max-w-[1680px] mx-auto px-6 md:px-10 lg:px-14 py-6 min-h-screen flex flex-col">
+      <div className="relative z-10 w-full max-w-420 mx-auto px-6 md:px-10 lg:px-14 py-6 min-h-screen flex flex-col">
         <header className="flex items-center justify-between border-b border-white/10 pb-5">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-teal-500/15 border border-teal-400/30 rounded-2xl flex items-center justify-center text-teal-300 shadow-lg shadow-teal-500/10">
@@ -33,7 +33,7 @@ export const TelaLandingPage: React.FC<TelaLandingPageProps> = ({
               <h1 className="text-2xl font-black tracking-tight">DermaScan</h1>
 
               <p className="text-[11px] uppercase tracking-[0.25em] text-slate-400 font-mono mt-1">
-                Classificação assistida de lesões
+                ClassificaÃ§Ã£o assistida de lesÃµes
               </p>
             </div>
           </div>
@@ -52,13 +52,13 @@ export const TelaLandingPage: React.FC<TelaLandingPageProps> = ({
             <h2 className="text-5xl md:text-6xl xl:text-7xl font-black leading-[1.02] tracking-tight">
               A IA que estende sua{" "}
               <span className="bg-linear-to-r from-teal-300 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
-                visão dermatológica.
+                visÃ£o dermatolÃ³gica.
               </span>
             </h2>
 
             <p className="mt-6 max-w-3xl text-slate-300 text-lg xl:text-xl leading-relaxed">
-              O DermaScan auxilia na análise visual de lesões dermatológicas,
-              apresentando classe provável, confiança, nível de atenção e
+              O DermaScan auxilia na anÃ¡lise visual de lesÃµes dermatolÃ³gicas,
+              apresentando classe provÃ¡vel, confianÃ§a, nÃ­vel de atenÃ§Ã£o e
               probabilidades para apoiar a triagem inicial.
             </p>
 
@@ -77,7 +77,7 @@ export const TelaLandingPage: React.FC<TelaLandingPageProps> = ({
                 onClick={onAbrirCadastro}
                 className="inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold px-6 py-4 rounded-2xl transition-all"
               >
-                Criar usuário
+                Criar usuÃ¡rio
               </button>
             </div>
 
@@ -90,14 +90,14 @@ export const TelaLandingPage: React.FC<TelaLandingPageProps> = ({
 
               <MiniCard
                 icone={<BrainCircuit className="w-5 h-5" />}
-                titulo="Análise por IA"
-                texto="Classificação assistida."
+                titulo="AnÃ¡lise por IA"
+                texto="ClassificaÃ§Ã£o assistida."
               />
 
               <MiniCard
                 icone={<CheckCircle2 className="w-5 h-5" />}
                 titulo="Resultado"
-                texto="Classe, confiança e atenção."
+                texto="Classe, confianÃ§a e atenÃ§Ã£o."
               />
             </div>
           </section>
