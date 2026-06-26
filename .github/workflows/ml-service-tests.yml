@@ -1,0 +1,33 @@
+name: ML Service Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "ml-service/**"
+      - ".github/workflows/ml-service-tests.yml"
+
+  pull_request:
+    paths:
+      - "ml-service/**"
+      - ".github/workflows/ml-service-tests.yml"
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run ml-service tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run pytest with Docker
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/ml-service:/app" \
+            -w /app \
+            python:3.11-slim \
+            sh -c "pip install -r requirements-dev.txt && pytest"
