@@ -1,22 +1,23 @@
 import { FormEvent, useState } from "react";
 import { cadastrarUsuarioBackend, fazerLoginBackend } from "../services/api";
-
-interface UseFormularioAutenticacaoProps {
-  tipoInicial: "login" | "cadastro";
-  onLoginSucesso: (nome: string, email: string) => void;
-  onCadastroSucesso: (nome: string, email: string) => void;
-}
-
-function validarEmail(valor: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
-}
+import { normalizarMensagemErro } from "../auth/normalizarErro";
+import { salvarUsuarioAtivoLocal } from "../auth/sessaoLocal";
+import type {
+  TipoFormularioAutenticacao,
+  UseFormularioAutenticacaoProps,
+} from "../auth/types";
+import {
+  validarCadastroFormulario,
+  validarLoginFormulario,
+  validarRecuperacaoSenhaFormulario,
+} from "../auth/validacoesFormulario";
 
 export function useFormularioAutenticacao({
   tipoInicial,
   onLoginSucesso,
   onCadastroSucesso,
 }: UseFormularioAutenticacaoProps) {
-  const [tipo, setTipo] = useState<"login" | "cadastro">(tipoInicial);
+  const [tipo, setTipo] = useState<TipoFormularioAutenticacao>(tipoInicial);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -33,7 +34,7 @@ export function useFormularioAutenticacao({
     setMensagemEsqueci(null);
   };
 
-  const alternarTipo = (novoTipo: "login" | "cadastro") => {
+  const alternarTipo = (novoTipo: TipoFormularioAutenticacao) => {
     setTipo(novoTipo);
     limparAlertas();
   };
@@ -52,14 +53,17 @@ export function useFormularioAutenticacao({
     evento.preventDefault();
     limparAlertas();
 
-    if (!emailEsquecido.trim() || !validarEmail(emailEsquecido)) {
-      setErro("Por favor, informe seu e-mail cadastrado.");
+    const mensagemValidacao =
+      validarRecuperacaoSenhaFormulario(emailEsquecido);
+
+    if (mensagemValidacao) {
+      setErro(mensagemValidacao);
       return;
     }
 
     setCarregando(true);
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       setCarregando(false);
       setMensagemEsqueci(
         `Um link de redefinição de senha foi enviado para ${emailEsquecido}.`,
@@ -80,23 +84,15 @@ export function useFormularioAutenticacao({
   };
 
   const cadastrarUsuario = async () => {
-    if (!nome.trim()) {
-      setErro("Por favor, informe seu nome completo.");
-      return;
-    }
+    const mensagemValidacao = validarCadastroFormulario({
+      nome,
+      email,
+      senha,
+      confirmarSenha,
+    });
 
-    if (!email.trim() || !validarEmail(email)) {
-      setErro("Por favor, informe um e-mail válido.");
-      return;
-    }
-
-    if (senha.length < 6) {
-      setErro("A senha deve conter pelo menos 6 caracteres.");
-      return;
-    }
-
-    if (senha !== confirmarSenha) {
-      setErro("As senhas digitadas não coincidem.");
+    if (mensagemValidacao) {
+      setErro(mensagemValidacao);
       return;
     }
 
@@ -112,25 +108,22 @@ export function useFormularioAutenticacao({
         respostaLogin.usuario.email,
       );
     } catch (erro) {
-      const mensagemErro =
-        erro instanceof Error
-          ? erro.message
-          : "Não foi possível cadastrar o usuário.";
-
-      setErro(mensagemErro);
+      setErro(
+        normalizarMensagemErro(
+          erro,
+          "Não foi possível cadastrar o usuário.",
+        ),
+      );
     } finally {
       setCarregando(false);
     }
   };
-  
-  const autenticarUsuario = async () => {
-    if (!email.trim() || !validarEmail(email)) {
-      setErro("Por favor, informe um e-mail válido.");
-      return;
-    }
 
-    if (!senha) {
-      setErro("Por favor, digite sua senha.");
+  const autenticarUsuario = async () => {
+    const mensagemValidacao = validarLoginFormulario({ email, senha });
+
+    if (mensagemValidacao) {
+      setErro(mensagemValidacao);
       return;
     }
 
@@ -144,17 +137,11 @@ export function useFormularioAutenticacao({
         email: resposta.usuario.email,
       };
 
-      localStorage.setItem(
-        "dermascan_user_active",
-        JSON.stringify(usuarioAtivo),
-      );
+      salvarUsuarioAtivoLocal(usuarioAtivo);
 
       onLoginSucesso(usuarioAtivo.nome, usuarioAtivo.email);
     } catch (erro) {
-      const mensagemErro =
-        erro instanceof Error ? erro.message : "E-mail ou senha inválidos.";
-
-      setErro(mensagemErro);
+      setErro(normalizarMensagemErro(erro, "E-mail ou senha inválidos."));
     } finally {
       setCarregando(false);
     }
