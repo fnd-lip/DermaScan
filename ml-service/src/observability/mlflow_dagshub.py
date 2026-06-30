@@ -76,4 +76,4 @@ def configurar_mlflow(configuracao: ConfiguracaoMLflowDagsHub | None = None) -> 
     mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment(configuracao_final.experimento)
 
-    return tracking_uris
+    return tracking_uri
