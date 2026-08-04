@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import timm
@@ -8,6 +9,16 @@ from torchvision import transforms
 
 
 class DermaScanPredictor:
+    CAMPOS_OBRIGATORIOS = {
+        "state_dict",
+        "architecture",
+        "num_classes",
+        "image_size",
+        "class_codes",
+        "class_names_pt",
+        "normalization",
+    }
+
     def __init__(
         self,
         caminho_modelo: Path,
@@ -22,16 +33,23 @@ class DermaScanPredictor:
 
         self.tamanho_imagem = int(self.checkpoint["image_size"])
 
-        self.codigos = list(self.checkpoint["class_codes"])
+        self.codigos = [str(codigo) for codigo in self.checkpoint["class_codes"]]
+
+        if len(self.codigos) != self.quantidade_classes:
+            raise ValueError(
+                "A quantidade de códigos das classes não corresponde "
+                "ao número de classes do modelo."
+            )
 
         self.nomes = self._normalizar_nomes(self.checkpoint["class_names_pt"])
 
         self.limiares = {
-            codigo: float(limiar)
+            str(codigo): float(limiar)
             for codigo, limiar in self.checkpoint.get(
                 "alert_thresholds",
                 {},
             ).items()
+            if str(codigo) in self.codigos
         }
 
         configuracao = self.checkpoint.get(
@@ -61,43 +79,83 @@ class DermaScanPredictor:
             strict=True,
         )
 
-        self.modelo.to(self.dispositivo).eval()
+        self.modelo.to(self.dispositivo)
+        self.modelo.eval()
 
-    @staticmethod
+    @classmethod
     def _carregar_checkpoint(
+        cls,
         caminho: Path,
-    ) -> dict:
-        if not caminho.is_file():
-            raise FileNotFoundError(f"Modelo não encontrado: {caminho}")
+    ) -> dict[str, Any]:
+        caminho_resolvido = caminho.expanduser().resolve()
 
-        try:
-            return torch.load(
-                caminho,
-                map_location="cpu",
-                weights_only=False,
+        if not caminho_resolvido.is_file():
+            raise FileNotFoundError(f"Modelo não encontrado: {caminho_resolvido}")
+
+        checkpoint = torch.load(
+            caminho_resolvido,
+            map_location="cpu",
+            weights_only=True,
+        )
+
+        if not isinstance(checkpoint, dict):
+            raise ValueError("Checkpoint inválido: era esperado um dicionário.")
+
+        campos_ausentes = cls.CAMPOS_OBRIGATORIOS.difference(checkpoint)
+
+        if campos_ausentes:
+            campos_formatados = ", ".join(sorted(campos_ausentes))
+
+            raise ValueError(
+                "Checkpoint incompleto. Campos ausentes: " f"{campos_formatados}"
             )
-        except TypeError:
-            return torch.load(
-                caminho,
-                map_location="cpu",
-            )
+
+        state_dict = checkpoint["state_dict"]
+
+        if not isinstance(state_dict, dict):
+            raise ValueError("Checkpoint inválido: state_dict deve ser um dicionário.")
+
+        return checkpoint
 
     def _normalizar_nomes(
         self,
-        nomes,
-    ) -> dict:
+        nomes: Any,
+    ) -> dict[str, str]:
         if isinstance(nomes, dict):
-            return nomes
+            nomes_normalizados = {
+                str(codigo): str(nome) for codigo, nome in nomes.items()
+            }
+        else:
+            nomes_normalizados = {
+                codigo: str(nome)
+                for codigo, nome in zip(
+                    self.codigos,
+                    nomes,
+                    strict=True,
+                )
+            }
 
-        return dict(
-            zip(
-                self.codigos,
-                nomes,
+        codigos_sem_nome = [
+            codigo for codigo in self.codigos if codigo not in nomes_normalizados
+        ]
+
+        if codigos_sem_nome:
+            raise ValueError(
+                "Nomes ausentes para as classes: " + ", ".join(codigos_sem_nome)
             )
-        )
 
-    def _criar_transformacao(self):
+        return nomes_normalizados
+
+    def _criar_transformacao(
+        self,
+    ) -> transforms.Compose:
         normalizacao = self.checkpoint["normalization"]
+
+        if not isinstance(normalizacao, dict):
+            raise ValueError("Configuração de normalização inválida.")
+
+        if "mean" not in normalizacao or "std" not in normalizacao:
+            raise ValueError("Configuração de normalização incompleta.")
 
         return transforms.Compose(
             [
@@ -125,9 +183,9 @@ class DermaScanPredictor:
         if self.usar_tta:
             visualizacoes.extend(
                 [
-                    torch.flip(tensor, [3]),
-                    torch.flip(tensor, [2]),
-                    torch.flip(tensor, [2, 3]),
+                    torch.flip(tensor, dims=[3]),
+                    torch.flip(tensor, dims=[2]),
+                    torch.flip(tensor, dims=[2, 3]),
                 ]
             )
 
@@ -143,12 +201,25 @@ class DermaScanPredictor:
         calibracao = self.checkpoint.get("calibration")
 
         if not calibracao:
-            return torch.softmax(logits, dim=1).cpu().numpy()
+            return (
+                torch.softmax(
+                    logits.float(),
+                    dim=1,
+                )
+                .cpu()
+                .numpy()
+            )
+
+        if not isinstance(calibracao, dict):
+            raise ValueError("Configuração de calibração inválida.")
 
         if calibracao.get("method") != "multinomial_logit":
             raise ValueError("Método de calibração incompatível.")
 
-        valores = logits.cpu().numpy().astype(np.float64)
+        if "coef" not in calibracao or "intercept" not in calibracao:
+            raise ValueError("Configuração de calibração incompleta.")
+
+        valores = logits.float().cpu().numpy().astype(np.float64)
 
         coeficientes = np.asarray(
             calibracao["coef"],
@@ -169,29 +240,41 @@ class DermaScanPredictor:
 
         probabilidades = np.exp(scores)
 
-        return probabilidades / (
-            probabilidades.sum(
-                axis=1,
-                keepdims=True,
-            )
+        somas = probabilidades.sum(
+            axis=1,
+            keepdims=True,
         )
+
+        if not np.isfinite(somas).all() or np.any(somas <= 0):
+            raise RuntimeError("A calibração produziu valores inválidos.")
+
+        return probabilidades / somas
 
     def prever(
         self,
         imagem: Image.Image,
-    ) -> dict:
+    ) -> dict[str, Any]:
         tensor = self.transformacao(imagem).unsqueeze(0).to(self.dispositivo)
 
         logits = self._executar_modelo(tensor)
 
         probabilidades = self._calibrar(logits)[0]
 
+        if not np.isfinite(probabilidades).all():
+            raise RuntimeError("A inferência produziu probabilidades inválidas.")
+
+        if not np.isclose(
+            probabilidades.sum(),
+            1.0,
+            atol=1e-6,
+        ):
+            raise RuntimeError("As probabilidades geradas não somam 1.")
+
         indice = int(probabilidades.argmax())
 
         alertas = {
             codigo: bool(probabilidades[self.codigos.index(codigo)] >= limiar)
             for codigo, limiar in self.limiares.items()
-            if codigo in self.codigos
         }
 
         return {

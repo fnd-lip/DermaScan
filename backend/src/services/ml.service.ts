@@ -38,9 +38,7 @@ export async function classificarComMlService(
   });
 
   if (!resposta.ok) {
-    const detalhe = await resposta.text();
-
-    console.error(`Erro do ML Service (${resposta.status}):`, detalhe);
+    console.error("O ML Service retornou uma resposta de erro");
 
     throw new Error("Falha ao classificar imagem no serviço de IA");
   }

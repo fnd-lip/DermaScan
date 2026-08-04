@@ -2,31 +2,22 @@ FROM python:3.11-slim AS runtime
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
 
 COPY requirements.txt .
 
-# PyTorch CPU
-RUN pip install \
-    --no-cache-dir \
-    --index-url https://download.pytorch.org/whl/cpu \
-    torch \
-    torchvision
-
-# outras dependências
-RUN pip install \
-    --no-cache-dir \
+RUN python -m pip install \
+    --only-binary=:all: \
+    --no-deps \
+    --index-url https://pypi.org/simple \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
     -r requirements.txt
 
 COPY src ./src
-
-# copia o checkpoint
-COPY models/modelo_dermascan.pth \
-     ./models/modelo_dermascan.pth
-
-# confirma que o modelo entrou na imagem
-RUN test -f /app/models/modelo_dermascan.pth
+COPY models/modelo_dermascan.pth ./models/modelo_dermascan.pth
 
 EXPOSE 5001
 
