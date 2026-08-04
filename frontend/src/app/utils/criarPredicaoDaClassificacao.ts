@@ -9,16 +9,19 @@ export function criarPredicaoDaClassificacao({
   resultado,
   imagemSelecionada,
 }: CriarPredicaoDaClassificacaoParams): Predicao {
+  const agora = new Date();
+
   return {
+    ...resultado,
+
     id: resultado.id || `analise_${Date.now()}`,
-    classePrevista: resultado.classePrevista,
-    confianca: resultado.confianca,
-    nivelAtencao: resultado.nivelAtencao as Predicao["nivelAtencao"],
-    probabilidades: resultado.probabilidades,
-    imagemUri: resultado.imagemUri || imagemSelecionada,
+
+    imagemUri:
+      resultado.imagemUri || imagemSelecionada,
+
     dataAnalise:
       resultado.dataAnalise ||
-      `${new Date().toLocaleDateString("pt-BR")} ${new Date().toLocaleTimeString(
+      `${agora.toLocaleDateString("pt-BR")} ${agora.toLocaleTimeString(
         "pt-BR",
         {
           hour: "2-digit",

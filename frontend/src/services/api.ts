@@ -4,9 +4,9 @@ import { requisicaoApi } from "./http";
 export async function classificarImagemLesao(
   imagemBase64: string,
   sampleId?: string,
-): Promise<Predicao & { fonte?: string }> {
+): Promise<Predicao> {
   try {
-    return await requisicaoApi<Predicao & { fonte?: string }>("/api/classify", {
+    return await requisicaoApi<Predicao>("/api/classify", {
       method: "POST",
       body: JSON.stringify({
         imageBase64: imagemBase64,
