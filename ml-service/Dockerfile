@@ -5,16 +5,17 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    PIP_ONLY_BINARY=:all:
 
-COPY requirements.txt .
+COPY requirements.lock.txt .
 
 RUN python -m pip install \
-    --only-binary=:all: \
+    --require-hashes \
     --no-deps \
     --index-url https://pypi.org/simple \
     --extra-index-url https://download.pytorch.org/whl/cpu \
-    -r requirements.txt
+    -r requirements.lock.txt
 
 COPY src ./src
 COPY models/modelo_dermascan.pth ./models/modelo_dermascan.pth
