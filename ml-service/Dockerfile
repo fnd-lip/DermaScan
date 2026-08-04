@@ -7,13 +7,26 @@ ENV PYTHONUNBUFFERED=1
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch torchvision
+# PyTorch CPU
+RUN pip install \
+    --no-cache-dir \
+    --index-url https://download.pytorch.org/whl/cpu \
+    torch \
+    torchvision
 
-RUN pip install --no-cache-dir -r requirements.txt
+# outras dependências
+RUN pip install \
+    --no-cache-dir \
+    -r requirements.txt
 
 COPY src ./src
-COPY bentofile.yaml .
-COPY models/modelo_dermascan.pth ./models/modelo_dermascan.pth
+
+# copia o checkpoint
+COPY models/modelo_dermascan.pth \
+     ./models/modelo_dermascan.pth
+
+# confirma que o modelo entrou na imagem
+RUN test -f /app/models/modelo_dermascan.pth
 
 EXPOSE 5001
 

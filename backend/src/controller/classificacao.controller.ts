@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
 import type { Prisma } from "../generated/prisma";
-import { classificarLesao } from "../services/classificacao.service";
 import { classificarComMlService } from "../services/ml.service";
 import { salvarImagemBase64 } from "../services/arquivo.service";
 
@@ -13,11 +12,17 @@ function montarUrlImagem(
   req: Request,
   imagemUrl: string | null,
 ): string | null {
-  if (!imagemUrl) return null;
+  if (!imagemUrl) {
+    return null;
+  }
 
-  if (imagemUrl.startsWith("http")) return imagemUrl;
+  if (imagemUrl.startsWith("http")) {
+    return imagemUrl;
+  }
 
-  if (imagemUrl.startsWith("data:image")) return imagemUrl;
+  if (imagemUrl.startsWith("data:image")) {
+    return imagemUrl;
+  }
 
   return `${req.protocol}://${req.get("host")}${imagemUrl}`;
 }
@@ -27,9 +32,8 @@ export async function classificarImagem(
   res: Response,
 ): Promise<void> {
   try {
-    const { imageBase64, sampleId } = req.body as {
+    const { imageBase64 } = req.body as {
       imageBase64?: string;
-      sampleId?: string;
     };
 
     const usuarioId = req.usuarioId;
@@ -41,31 +45,26 @@ export async function classificarImagem(
       return;
     }
 
-    if (!imageBase64 && !sampleId) {
+    if (
+      !imageBase64 ||
+      typeof imageBase64 !== "string" ||
+      imageBase64.trim().length === 0
+    ) {
       res.status(400).json({
-        error: "Envie uma imagem ou uma amostra para análise.",
+        error: "Envie uma imagem válida para análise.",
       });
       return;
     }
 
-    const predicao = imageBase64
-      ? await classificarComMlService(imageBase64)
-      : classificarLesao(sampleId);
+    const predicao = await classificarComMlService(imageBase64);
 
-    const predicaoComImagem = predicao as typeof predicao & {
-      imagemUrl?: string | null;
-    };
+    const { codigo, confiancaPercentual, alertaAtencao, alertas } = predicao;
 
-    const imagemSalva = imageBase64
-      ? await salvarImagemBase64(imageBase64, usuarioId)
-      : null;
+    const imagemSalva = await salvarImagemBase64(imageBase64, usuarioId);
 
-    const imagemUrlFinal =
-      imagemSalva?.caminhoRelativo || predicaoComImagem.imagemUrl || null;
+    const imagemUrlFinal = imagemSalva.caminhoRelativo;
 
-    const probabilidadesJson = converterParaJsonPrisma(
-      predicao.probabilidades ?? [],
-    );
+    const probabilidadesJson = converterParaJsonPrisma(predicao.probabilidades);
 
     const analise = await prisma.analise.create({
       data: {
@@ -74,7 +73,6 @@ export async function classificarImagem(
             id: usuarioId,
           },
         },
-        sampleId: sampleId ?? null,
         imagemUrl: imagemUrlFinal,
         classePrevista: predicao.classePrevista,
         confianca: predicao.confianca,
@@ -87,9 +85,13 @@ export async function classificarImagem(
     res.json({
       id: analise.id,
       classePrevista: predicao.classePrevista,
+      codigo,
       confianca: predicao.confianca,
+      confiancaPercentual,
       nivelAtencao: predicao.nivelAtencao,
-      probabilidades: predicao.probabilidades ?? [],
+      alertaAtencao,
+      alertas,
+      probabilidades: predicao.probabilidades,
       fonte: predicao.fonte,
       imagemUri: montarUrlImagem(req, imagemUrlFinal),
       dataAnalise: analise.criadoEm.toISOString(),
@@ -131,6 +133,7 @@ export async function listarAnalises(
         id: analise.id,
         classePrevista: analise.classePrevista,
         confianca: analise.confianca,
+        confiancaPercentual: Number((analise.confianca * 100).toFixed(2)),
         nivelAtencao: analise.nivelAtencao,
         probabilidades: analise.probabilidades ?? [],
         dataAnalise: analise.criadoEm.toISOString(),
