@@ -60,8 +60,8 @@ export async function classificarImagem(
 
     const { codigo, confiancaPercentual, alertaAtencao, alertas } = predicao;
 
-    const imagemSalva = await salvarImagemBase64(imageBase64, usuarioId);
-
+    const imagemSalva = await salvarImagemBase64(imageBase64);
+    
     const imagemUrlFinal = imagemSalva.caminhoRelativo;
 
     const probabilidadesJson = converterParaJsonPrisma(predicao.probabilidades);

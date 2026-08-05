@@ -26,13 +26,15 @@ RUN sed -i 's/listen       80;/listen       8080;/' \
         /etc/nginx/nginx.conf \
     && chown -R nginx:nginx \
         /var/cache/nginx \
-        /etc/nginx/conf.d \
-        /usr/share/nginx/html
+        /etc/nginx/conf.d
 
 COPY --from=builder \
-    --chown=nginx:nginx \
+    --chown=root:root \
     /app/dist \
     /usr/share/nginx/html
+
+RUN find /usr/share/nginx/html -type d -exec chmod 755 {} \; \
+    && find /usr/share/nginx/html -type f -exec chmod 644 {} \;
 
 USER nginx
 

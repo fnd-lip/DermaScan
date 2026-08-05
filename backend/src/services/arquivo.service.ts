@@ -6,27 +6,38 @@ interface ImagemSalva {
   caminhoRelativo: string;
 }
 
+type ExtensaoImagem = "jpg" | "png" | "webp";
+
 const PADRAO_DATA_URL_IMAGEM = /^data:image\/(png|jpeg|jpg|webp);base64,/;
 
-function obterExtensaoImagem(imageBase64: string): string {
+const PASTA_BASE_ANALISES = path.resolve(process.cwd(), "uploads", "analises");
+
+function obterExtensaoImagem(imageBase64: string): ExtensaoImagem {
   const correspondencia = PADRAO_DATA_URL_IMAGEM.exec(imageBase64);
 
   if (!correspondencia) {
     return "jpg";
   }
 
-  const tipo = correspondencia[1];
+  switch (correspondencia[1]) {
+    case "png":
+      return "png";
 
-  if (tipo === "jpeg") {
-    return "jpg";
+    case "webp":
+      return "webp";
+
+    case "jpeg":
+    case "jpg":
+    default:
+      return "jpg";
   }
-
-  return tipo;
 }
 
 function removerPrefixoBase64(imageBase64: string): string {
-  if (imageBase64.includes(",")) {
-    return imageBase64.split(",")[1];
+  const posicaoVirgula = imageBase64.indexOf(",");
+
+  if (posicaoVirgula >= 0) {
+    return imageBase64.slice(posicaoVirgula + 1);
   }
 
   return imageBase64;
@@ -34,7 +45,6 @@ function removerPrefixoBase64(imageBase64: string): string {
 
 export async function salvarImagemBase64(
   imageBase64: string,
-  usuarioId: string,
 ): Promise<ImagemSalva> {
   const extensao = obterExtensaoImagem(imageBase64);
   const base64Limpo = removerPrefixoBase64(imageBase64);
@@ -42,18 +52,21 @@ export async function salvarImagemBase64(
 
   const nomeArquivo = `${randomUUID()}.${extensao}`;
 
-  const pastaRelativa = path.join("uploads", "analises", usuarioId);
-  const pastaAbsoluta = path.resolve(process.cwd(), pastaRelativa);
-
-  await mkdir(pastaAbsoluta, {
+  await mkdir(PASTA_BASE_ANALISES, {
     recursive: true,
   });
 
-  const caminhoAbsoluto = path.join(pastaAbsoluta, nomeArquivo);
+  const caminhoAbsoluto = path.resolve(PASTA_BASE_ANALISES, nomeArquivo);
 
-  await writeFile(caminhoAbsoluto, buffer);
+  if (path.dirname(caminhoAbsoluto) !== PASTA_BASE_ANALISES) {
+    throw new Error("Caminho de destino inválido.");
+  }
+
+  await writeFile(caminhoAbsoluto, buffer, {
+    flag: "wx",
+  });
 
   return {
-    caminhoRelativo: `/uploads/analises/${usuarioId}/${nomeArquivo}`,
+    caminhoRelativo: `/uploads/analises/${nomeArquivo}`,
   };
 }
