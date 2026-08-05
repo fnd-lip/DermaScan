@@ -8,9 +8,7 @@ export const ConteudoSobreAplicativo: React.FC = () => {
         <strong>Projeto:</strong> DermaScan
       </p>
 
-      <p>
-        Este aplicativo foi desenvolvido como uma solução educacional 
-      </p>
+      <p>Este aplicativo foi desenvolvido como uma solução educacional.</p>
 
       <p>
         Desenvolvido originalmente sob a arquitetura{" "}
@@ -45,7 +43,7 @@ export const ConteudoAvisoMedico: React.FC = () => {
           não substitui de forma alguma uma consulta médica presencial ou exame
           especializado (dermatoscopia)
         </strong>
-        .
+        {"."}
       </p>
 
       <p>
@@ -80,7 +78,11 @@ export const ConteudoPrivacidadeDados: React.FC = () => {
   );
 };
 
-function LinhaPermissao({ nome }: { nome: string }) {
+type LinhaPermissaoProps = Readonly<{
+  nome: string;
+}>;
+
+function LinhaPermissao({ nome }: LinhaPermissaoProps) {
   return (
     <div className="flex justify-between items-center bg-gray-50 p-2.5 rounded-lg border border-gray-150">
       <span className="font-semibold text-gray-800">{nome}:</span>

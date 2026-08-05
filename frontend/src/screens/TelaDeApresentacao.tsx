@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Shield, Camera, Stethoscope } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { Camera, Shield, Stethoscope } from "lucide-react";
 import { BotaoPrincipal } from "../components/ui/BotaoPrincipal";
 
 interface TelaDeApresentacaoProps {
@@ -18,8 +18,8 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
       descricao:
         "Tire uma foto ou envie uma imagem da galeria para iniciar a análise da lesão dermatológica.",
       detalhes:
-        "O sistema aceita capturas em tempo-real ou fotos antigas guardadas no seu rolo de câmera.",
-      icone: <Camera className="w-10 h-10 text-teal-600" />,
+        "O sistema aceita capturas em tempo real ou fotos antigas guardadas no seu rolo de câmera.",
+      icone: <Camera className="w-10 h-10 text-teal-600" aria-hidden="true" />,
       tituloBotao: "Avançar",
     },
     {
@@ -28,7 +28,7 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
         "O aplicativo utiliza inteligência artificial para classificar imagens de pele com base em padrões visuais.",
       detalhes:
         "A inteligência artificial analisa características visuais da lesão para estimar uma possível classificação.",
-      icone: <Shield className="w-10 h-10 text-teal-600" />,
+      icone: <Shield className="w-10 h-10 text-teal-600" aria-hidden="true" />,
       tituloBotao: "Entendi",
     },
     {
@@ -37,7 +37,9 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
         "Este aplicativo não substitui uma consulta médica. Em caso de dúvida, procure um dermatologista.",
       detalhes:
         "As classificações geradas por inteligência artificial são apenas estimativas estatísticas para apoiar o aprendizado acadêmico.",
-      icone: <Stethoscope className="w-10 h-10 text-teal-600" />,
+      icone: (
+        <Stethoscope className="w-10 h-10 text-teal-600" aria-hidden="true" />
+      ),
       tituloBotao: "Começar",
     },
   ];
@@ -45,9 +47,10 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
   const handleProximo = () => {
     if (slideAtual < slides.length - 1) {
       setSlideAtual(slideAtual + 1);
-    } else {
-      onFinalizarOnboarding();
+      return;
     }
+
+    onFinalizarOnboarding();
   };
 
   const handleVoltar = () => {
@@ -58,10 +61,10 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-slate-50 text-gray-800 p-6 justify-between select-none">
-      {/* Botão de Pular no Topo */}
       <div className="flex justify-between items-center h-8">
         {slideAtual > 0 ? (
           <button
+            type="button"
             onClick={handleVoltar}
             className="text-gray-400 hover:text-gray-600 text-xs font-semibold"
           >
@@ -73,6 +76,7 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
 
         {slideAtual < slides.length - 1 && (
           <button
+            type="button"
             onClick={onFinalizarOnboarding}
             className="text-teal-600 hover:text-teal-700 text-xs font-semibold"
           >
@@ -81,7 +85,6 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
         )}
       </div>
 
-      {/* Slide animado */}
       <div className="flex-1 flex flex-col justify-center my-6">
         <AnimatePresence mode="wait">
           <motion.div
@@ -111,14 +114,15 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Rodapé: Indicadores de Progresso & Ação */}
       <div className="flex flex-col items-center gap-6 pb-4">
-        {/* Marcadores de Slide */}
-        <div className="flex gap-2.5">
-          {slides.map((_, index) => (
+        <div className="flex gap-2.5" aria-label="Seleção de slide">
+          {slides.map((slide, index) => (
             <button
-              key={index}
+              type="button"
+              key={slide.titulo}
               onClick={() => setSlideAtual(index)}
+              aria-label={`Ir para o slide ${index + 1}: ${slide.titulo}`}
+              aria-current={index === slideAtual ? "step" : undefined}
               className={`h-2 rounded-full transition-all duration-300 ${
                 index === slideAtual ? "w-6 bg-teal-600" : "w-2 bg-gray-300"
               }`}
@@ -126,7 +130,6 @@ export const TelaDeApresentacao: React.FC<TelaDeApresentacaoProps> = ({
           ))}
         </div>
 
-        {/* Botão Principal de Slide */}
         <BotaoPrincipal
           titulo={slides[slideAtual].tituloBotao}
           onClick={handleProximo}

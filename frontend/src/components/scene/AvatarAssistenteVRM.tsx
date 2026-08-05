@@ -8,9 +8,9 @@ import {
   type ControladorAssistenteVRM,
 } from "./vrm/acoesAssistenteVRM";
 
-interface AvatarAssistenteVRMProps {
+type AvatarAssistenteVRMProps = Readonly<{
   caminhoModelo: string;
-}
+}>;
 
 /*
   Ajustes principais do avatar.
@@ -26,9 +26,6 @@ const POSICAO_AVATAR: [number, number, number] = [-1.62, -1.18, 0];
 
 const ESCALA_AVATAR: [number, number, number] = [1.4, 1.4, 1.4];
 
-/*
-  Inversão para ela virar para o painel.
-*/
 const ROTACAO_BASE_AVATAR = Math.PI + 0.55;
 
 const INTENSIDADE_FLUTUACAO = 0.035;
@@ -38,25 +35,18 @@ const INTENSIDADE_MOVIMENTO_LATERAL = 0.16;
 export const AvatarAssistenteVRM: React.FC<AvatarAssistenteVRMProps> = ({
   caminhoModelo,
 }) => {
-  /*
-    O carregamento real fica por conta do GLTFLoader
-  */
-  return (
-    <ModeloVRMSeguro
-      key={caminhoModelo}
-      caminhoModelo={caminhoModelo}
-    />
-  );
+  return <ModeloVRMSeguro key={caminhoModelo} caminhoModelo={caminhoModelo} />;
 };
 
-interface ModeloVRMProps {
+type ModeloVRMProps = Readonly<{
   caminhoModelo: string;
-}
+}>;
 
 function ModeloVRMSeguro({ caminhoModelo }: ModeloVRMProps) {
   const grupoRef = useRef<ThreeGroup>(null);
-  const controladorAssistenteRef =
-    useRef<ControladorAssistenteVRM | null>(null);
+  const controladorAssistenteRef = useRef<ControladorAssistenteVRM | null>(
+    null,
+  );
 
   const [vrm, setVrm] = useState<VRM | null>(null);
   const [falhouAoCarregar, setFalhouAoCarregar] = useState(false);
@@ -73,7 +63,9 @@ function ModeloVRMSeguro({ caminhoModelo }: ModeloVRMProps) {
     loader.load(
       caminhoModelo,
       (gltf) => {
-        if (!componenteAtivo) return;
+        if (!componenteAtivo) {
+          return;
+        }
 
         const modeloVrm = (gltf as unknown as { userData: { vrm?: VRM } })
           .userData.vrm;
@@ -95,7 +87,9 @@ function ModeloVRMSeguro({ caminhoModelo }: ModeloVRMProps) {
       },
       undefined,
       (erro) => {
-        if (!componenteAtivo) return;
+        if (!componenteAtivo) {
+          return;
+        }
 
         console.warn("Falha ao carregar o modelo VRM:", caminhoModelo, erro);
         setFalhouAoCarregar(true);
@@ -109,7 +103,9 @@ function ModeloVRMSeguro({ caminhoModelo }: ModeloVRMProps) {
   }, [caminhoModelo]);
 
   useFrame((estado, delta) => {
-    if (!vrm || !grupoRef.current) return;
+    if (!vrm || !grupoRef.current) {
+      return;
+    }
 
     vrm.update(delta);
 
@@ -117,11 +113,9 @@ function ModeloVRMSeguro({ caminhoModelo }: ModeloVRMProps) {
 
     controladorAssistenteRef.current?.atualizar(tempo);
 
-    const movimentoVertical =
-      Math.sin(tempo * 1.45) * INTENSIDADE_FLUTUACAO;
+    const movimentoVertical = Math.sin(tempo * 1.45) * INTENSIDADE_FLUTUACAO;
 
-    const movimentoRotacao =
-      Math.sin(tempo * 0.9) * INTENSIDADE_ROTACAO;
+    const movimentoRotacao = Math.sin(tempo * 0.9) * INTENSIDADE_ROTACAO;
 
     const movimentoLateral =
       Math.sin(tempo * 0.75) * INTENSIDADE_MOVIMENTO_LATERAL;

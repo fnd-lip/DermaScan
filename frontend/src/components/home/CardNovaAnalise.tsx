@@ -30,6 +30,7 @@ export const CardNovaAnalise: React.FC<CardNovaAnaliseProps> = ({
           </p>
 
           <button
+            type="button"
             onClick={onIrParaAnalise}
             className="mt-5 inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-teal-800 shadow-lg shadow-teal-950/15 transition hover:-translate-y-0.5 hover:bg-teal-50 active:translate-y-0"
           >

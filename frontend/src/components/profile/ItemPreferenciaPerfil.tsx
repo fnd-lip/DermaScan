@@ -31,14 +31,16 @@ export const ItemPreferenciaPerfil: React.FC<ItemPreferenciaPerfilProps> = ({
       </div>
 
       <button
+        type="button"
         onClick={onToggle}
         className="text-teal-600 focus:outline-none shrink-0 pl-1"
         aria-pressed={ativo}
+        aria-label={`${ativo ? "Desativar" : "Ativar"} ${titulo}`}
       >
         {ativo ? (
-          <ToggleRight className="w-9 h-9" />
+          <ToggleRight className="w-9 h-9" aria-hidden="true" />
         ) : (
-          <ToggleLeft className="w-9 h-9 text-gray-300" />
+          <ToggleLeft className="w-9 h-9 text-gray-300" aria-hidden="true" />
         )}
       </button>
     </div>

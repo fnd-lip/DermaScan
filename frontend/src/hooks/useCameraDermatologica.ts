@@ -1,10 +1,12 @@
-﻿import { ChangeEvent, useEffect, useRef, useState } from 'react';
+﻿import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 interface UseCameraDermatologicaProps {
   onImagemSelecionada: (uri: string, sampleId?: string) => void;
 }
 
-export function useCameraDermatologica({ onImagemSelecionada }: UseCameraDermatologicaProps) {
+export function useCameraDermatologica({
+  onImagemSelecionada,
+}: UseCameraDermatologicaProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [usandoCameraReal, setUsandoCameraReal] = useState(false);
@@ -19,33 +21,35 @@ export function useCameraDermatologica({ onImagemSelecionada }: UseCameraDermato
     setErroCamera(null);
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: 640, height: 640 },
+        video: { facingMode: "environment", width: 640, height: 640 },
         audio: false,
       });
       setUsandoCameraReal(true);
       setStream(mediaStream);
       if (videoRef.current) videoRef.current.srcObject = mediaStream;
-    } catch (erro) {
-      console.error('Camera access error:', erro);
-      setErroCamera('Permissão de câmera negada ou indisponível. Ative a permissão de câmera nas configurações para capturar fotos.');
+    } catch (error_) {
+      console.error("Camera access error:", error_);
+      setErroCamera(
+        "Permissão de câmera negada ou indisponível. Ative a permissão de câmera nas configurações para capturar fotos.",
+      );
     }
   };
 
   const capturarFoto = () => {
     if (!videoRef.current) return;
 
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = videoRef.current.videoWidth || 640;
     canvas.height = videoRef.current.videoHeight || 640;
 
-    const contexto = canvas.getContext('2d');
+    const contexto = canvas.getContext("2d");
     if (!contexto) return;
 
     contexto.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     encerrarCamera(stream);
     setStream(null);
     setUsandoCameraReal(false);
-    onImagemSelecionada(canvas.toDataURL('image/jpeg'), 'captured_photo');
+    onImagemSelecionada(canvas.toDataURL("image/jpeg"), "captured_photo");
   };
 
   const cancelarCamera = () => {
@@ -64,7 +68,7 @@ export function useCameraDermatologica({ onImagemSelecionada }: UseCameraDermato
     const leitor = new FileReader();
     leitor.onload = (resultado) => {
       if (resultado.target?.result) {
-        onImagemSelecionada(resultado.target.result as string, 'uploaded_file');
+        onImagemSelecionada(resultado.target.result as string, "uploaded_file");
       }
     };
     leitor.readAsDataURL(arquivo);
@@ -86,6 +90,3 @@ export function useCameraDermatologica({ onImagemSelecionada }: UseCameraDermato
 function encerrarCamera(stream: MediaStream | null) {
   stream?.getTracks().forEach((track) => track.stop());
 }
-
-
-

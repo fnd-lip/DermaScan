@@ -49,22 +49,27 @@ export const TelaAvisoMedico: React.FC<TelaAvisoMedicoProps> = ({
                 </strong>
               </span>
             </div>
-            
+
             <div className="p-2.5 bg-white rounded-lg border border-gray-200">
               <strong className="text-gray-900 block mb-1 font-bold">
                 2. Classificação Estatística
               </strong>
-              As respostas mostradas indicam qual a maior probabilidade
-              estatística de analogia visual conforme dados de treino. O
-              resultado é meramente educacional e preliminar.
+
+              <p>
+                As respostas mostradas indicam qual a maior probabilidade
+                estatística de analogia visual conforme dados de treino. O
+                resultado é meramente educacional e preliminar.
+              </p>
             </div>
 
             <div className="p-2.5 bg-white rounded-lg border border-gray-200">
               <strong className="text-gray-900 block mb-1 font-bold">
                 3. Sinais de Alerta Críticos
               </strong>
-              Recomenda-se procurar assistência clínica imediatamente se notar
-              os seguintes sintomas na lesão dermatológica:
+              <p>
+                Recomenda-se procurar assistência clínica imediatamente se notar
+                os seguintes sintomas na lesão dermatológica:
+              </p>
               <ul className="list-disc pl-4 mt-2 space-y-1 text-gray-700">
                 <li>Crescimento rápido ou expansão do tamanho</li>
                 <li>Mudanças de cor ou múltiplos matizes</li>

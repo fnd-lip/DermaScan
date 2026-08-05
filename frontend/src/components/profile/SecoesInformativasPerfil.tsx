@@ -9,10 +9,14 @@ import {
 
 function obterIconeSecao(tipoIcone: TipoIconeSecaoPerfil): ReactNode {
   const icones: Record<TipoIconeSecaoPerfil, ReactNode> = {
-    info: <Info className="w-5 h-5 text-teal-600" />,
-    alerta: <AlertTriangle className="w-5 h-5 text-amber-600" />,
-    privacidade: <ShieldCheck className="w-5 h-5 text-indigo-600" />,
-    camera: <Camera className="w-5 h-5 text-emerald-600" />,
+    info: <Info className="w-5 h-5 text-teal-600" aria-hidden="true" />,
+    alerta: (
+      <AlertTriangle className="w-5 h-5 text-amber-600" aria-hidden="true" />
+    ),
+    privacidade: (
+      <ShieldCheck className="w-5 h-5 text-indigo-600" aria-hidden="true" />
+    ),
+    camera: <Camera className="w-5 h-5 text-emerald-600" aria-hidden="true" />,
   };
 
   return icones[tipoIcone];
@@ -38,7 +42,9 @@ export const SecoesInformativasPerfil: React.FC = () => {
               className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-xs"
             >
               <button
+                type="button"
                 onClick={() => setAbaAberta(aberto ? null : item.id)}
+                aria-expanded={aberto}
                 className="w-full p-4 flex justify-between items-center text-left bg-white hover:bg-slate-50 transition-colors"
               >
                 <div className="flex items-center gap-3">

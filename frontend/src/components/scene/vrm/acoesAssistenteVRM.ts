@@ -83,11 +83,17 @@ function combinarPoses(...poses: PoseAssistente[]): PoseAssistente {
   for (const pose of poses) {
     for (const [nomeOsso, rotacao] of Object.entries(pose)) {
       const osso = nomeOsso as VRMHumanBoneName;
+      const rotacaoAtual = poseCombinada[osso];
+      const novaRotacao = rotacao as RotacaoOsso;
 
-      poseCombinada[osso] = {
-        ...(poseCombinada[osso] ?? {}),
-        ...(rotacao as RotacaoOsso),
-      };
+      poseCombinada[osso] = rotacaoAtual
+        ? {
+            ...rotacaoAtual,
+            ...novaRotacao,
+          }
+        : {
+            ...novaRotacao,
+          };
     }
   }
 

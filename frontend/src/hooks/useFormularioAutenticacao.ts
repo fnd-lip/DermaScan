@@ -53,8 +53,7 @@ export function useFormularioAutenticacao({
     evento.preventDefault();
     limparAlertas();
 
-    const mensagemValidacao =
-      validarRecuperacaoSenhaFormulario(emailEsquecido);
+    const mensagemValidacao = validarRecuperacaoSenhaFormulario(emailEsquecido);
 
     if (mensagemValidacao) {
       setErro(mensagemValidacao);
@@ -107,12 +106,9 @@ export function useFormularioAutenticacao({
         respostaLogin.usuario.nome,
         respostaLogin.usuario.email,
       );
-    } catch (erro) {
+    } catch (error_) {
       setErro(
-        normalizarMensagemErro(
-          erro,
-          "Não foi possível cadastrar o usuário.",
-        ),
+        normalizarMensagemErro(error_, "Não foi possível cadastrar o usuário."),
       );
     } finally {
       setCarregando(false);
@@ -140,8 +136,8 @@ export function useFormularioAutenticacao({
       salvarUsuarioAtivoLocal(usuarioAtivo);
 
       onLoginSucesso(usuarioAtivo.nome, usuarioAtivo.email);
-    } catch (erro) {
-      setErro(normalizarMensagemErro(erro, "E-mail ou senha inválidos."));
+    } catch (error_) {
+      setErro(normalizarMensagemErro(error_, "E-mail ou senha inválidos."));
     } finally {
       setCarregando(false);
     }

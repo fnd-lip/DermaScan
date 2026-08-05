@@ -39,7 +39,7 @@ export const CabecalhoPerfil: React.FC<CabecalhoPerfilProps> = ({
 
         <div className="flex gap-2 mt-2">
           <span className="text-[9px] bg-teal-50 text-teal-700 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
-            Usuário Acadêmico
+            Usuário
           </span>
 
           <span className="text-[9px] bg-slate-100 text-gray-600 font-bold px-2 py-0.5 rounded-full font-mono">
