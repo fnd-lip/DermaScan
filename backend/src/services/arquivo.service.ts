@@ -1,19 +1,25 @@
-import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
+import { randomUUID } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 interface ImagemSalva {
   caminhoRelativo: string;
 }
 
+const PADRAO_DATA_URL_IMAGEM = /^data:image\/(png|jpeg|jpg|webp);base64,/;
+
 function obterExtensaoImagem(imageBase64: string): string {
-  const match = imageBase64.match(/^data:image\/(png|jpeg|jpg|webp);base64,/);
+  const correspondencia = PADRAO_DATA_URL_IMAGEM.exec(imageBase64);
 
-  if (!match) return "jpg";
+  if (!correspondencia) {
+    return "jpg";
+  }
 
-  const tipo = match[1];
+  const tipo = correspondencia[1];
 
-  if (tipo === "jpeg") return "jpg";
+  if (tipo === "jpeg") {
+    return "jpg";
+  }
 
   return tipo;
 }
@@ -44,6 +50,7 @@ export async function salvarImagemBase64(
   });
 
   const caminhoAbsoluto = path.join(pastaAbsoluta, nomeArquivo);
+
   await writeFile(caminhoAbsoluto, buffer);
 
   return {

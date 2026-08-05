@@ -9,10 +9,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build backend and frontend
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -22,42 +26,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
 
       - name: Install backend dependencies
         working-directory: backend
-        run: npm install
+        run: npm ci --ignore-scripts --audit=false --fund=false
 
       - name: Generate Prisma client
         working-directory: backend
         env:
-          DATABASE_URL: postgresql://dermascan:dermascan123@localhost:5432/dermascan_db?schema=public
-          JWT_SECRET: ci_secret
-          JWT_EXPIRES_IN: 7d
-          NODE_ENV: test
-          ML_SERVICE_URL: http://localhost:5001
-        run: npm exec -- prisma generate
+          DATABASE_URL: postgresql://ci_user@localhost:5432/dermascan_ci?schema=public
+        run: ./node_modules/.bin/prisma generate
 
       - name: Build backend
         working-directory: backend
-        env:
-          DATABASE_URL: postgresql://dermascan:dermascan123@localhost:5432/dermascan_db?schema=public
-          JWT_SECRET: ci_secret
-          JWT_EXPIRES_IN: 7d
-          NODE_ENV: test
-          ML_SERVICE_URL: http://localhost:5001
         run: npm run build
+
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint
 
       - name: Install frontend dependencies
         working-directory: frontend
-        run: npm install
+        run: npm ci --ignore-scripts --audit=false --fund=false
 
       - name: Build frontend
         working-directory: frontend
         run: npm run build
-      
-      - name: Lint backend
-        working-directory: backend
-        run: npm run lint
 
       - name: Lint frontend
         working-directory: frontend

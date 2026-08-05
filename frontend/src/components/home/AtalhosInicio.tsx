@@ -18,6 +18,7 @@ export const AtalhosInicio: React.FC<AtalhosInicioProps> = ({
 
       <div className="grid gap-3 md:grid-cols-2">
         <button
+          type="button"
           onClick={onIrParaHistorico}
           className="group rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-teal-200 hover:shadow-lg hover:shadow-teal-900/10 active:scale-[0.99]"
         >
@@ -35,6 +36,7 @@ export const AtalhosInicio: React.FC<AtalhosInicioProps> = ({
         </button>
 
         <button
+          type="button"
           onClick={onIrParaEducacao}
           className="group rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-900/10 active:scale-[0.99]"
         >

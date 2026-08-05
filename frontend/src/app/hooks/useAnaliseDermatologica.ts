@@ -89,10 +89,10 @@ export function useAnaliseDermatologica({
           "sucesso",
         );
       }
-    } catch (erro) {
+    } catch (error_) {
       const mensagemErro =
-        erro instanceof Error
-          ? erro.message
+        error_ instanceof Error
+          ? error_.message
           : "Não foi possível realizar a classificação.";
 
       adicionarLog(`Falha na classificação: ${mensagemErro}`, "erro");

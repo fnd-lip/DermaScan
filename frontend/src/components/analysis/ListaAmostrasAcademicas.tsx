@@ -6,10 +6,12 @@ interface ListaAmostrasAcademicasProps {
   onSelecionarAmostra: (uri: string, sampleId?: string) => void;
 }
 
-export const ListaAmostrasAcademicas: React.FC<ListaAmostrasAcademicasProps> = ({
-  onSelecionarAmostra,
-}) => {
-  const [imagensComErro, setImagensComErro] = useState<Record<string, boolean>>({});
+export const ListaAmostrasAcademicas: React.FC<
+  ListaAmostrasAcademicasProps
+> = ({ onSelecionarAmostra }) => {
+  const [imagensComErro, setImagensComErro] = useState<Record<string, boolean>>(
+    {},
+  );
 
   const marcarErroImagem = (id: string) => {
     setImagensComErro((estadoAtual) => ({
@@ -41,10 +43,11 @@ export const ListaAmostrasAcademicas: React.FC<ListaAmostrasAcademicasProps> = (
           const imagemComErro = imagensComErro[amostra.id];
 
           return (
-            <div
+            <button
               key={amostra.id}
+              type="button"
               onClick={() => onSelecionarAmostra(amostra.url, amostra.id)}
-              className="bg-white border border-gray-200 p-2.5 rounded-xl hover:border-teal-300 hover:bg-teal-50/10 cursor-pointer shadow-sm hover:shadow-md transition-all flex items-center gap-3 group"
+              className="w-full text-left bg-white border border-gray-200 p-2.5 rounded-xl hover:border-teal-300 hover:bg-teal-50/10 cursor-pointer shadow-sm hover:shadow-md transition-all flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
             >
               <div className="w-11 h-11 bg-slate-100 rounded-lg overflow-hidden relative border border-gray-200 shrink-0">
                 {!imagemComErro ? (
@@ -79,10 +82,10 @@ export const ListaAmostrasAcademicas: React.FC<ListaAmostrasAcademicasProps> = (
                 </p>
               </div>
 
-              <div className="w-6 h-6 bg-slate-50 rounded-md border border-gray-100 flex items-center justify-center text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="w-6 h-6 bg-slate-50 rounded-md border border-gray-100 flex items-center justify-center text-teal-600 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity">
                 <Eye className="w-3.5 h-3.5" />
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

@@ -22,8 +22,8 @@ export function useHistoricoAnalises({
 
       setHistorico(analises);
       adicionarLog("Histórico carregado do banco de dados.", "sucesso");
-    } catch (erro) {
-      console.error("Falha ao carregar histórico do backend:", erro);
+    } catch (error_) {
+      console.error("Falha ao carregar histórico do backend:", error_);
       adicionarLog("Não foi possível carregar o histórico do backend.", "erro");
     }
   }, [adicionarLog]);
@@ -35,10 +35,10 @@ export function useHistoricoAnalises({
         await carregarHistoricoDoBackend();
 
         adicionarLog(`Análise ${id} excluída do banco de dados.`, "sucesso");
-      } catch (erro) {
+      } catch (error_) {
         const mensagemErro =
-          erro instanceof Error
-            ? erro.message
+          error_ instanceof Error
+            ? error_.message
             : "Não foi possível excluir a análise.";
 
         adicionarLog(`Falha ao excluir análise: ${mensagemErro}`, "erro");
@@ -62,10 +62,10 @@ export function useHistoricoAnalises({
       setHistorico([]);
 
       adicionarLog("Histórico limpo no banco de dados.", "sucesso");
-    } catch (erro) {
+    } catch (error_) {
       const mensagemErro =
-        erro instanceof Error
-          ? erro.message
+        error_ instanceof Error
+          ? error_.message
           : "Não foi possível limpar o histórico.";
 
       adicionarLog(`Falha ao limpar histórico: ${mensagemErro}`, "erro");

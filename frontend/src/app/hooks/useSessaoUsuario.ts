@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { buscarUsuarioAtual, sairDaContaBackend } from "../../services/api";
-import {
-  AbaAtiva,
-  FaseFluxo,
-  TipoLog,
-  UsuarioLogado,
-} from "../types/fluxo";
+import { AbaAtiva, FaseFluxo, TipoLog, UsuarioLogado } from "../types/fluxo";
 
 interface UseSessaoUsuarioParams {
   adicionarLog: (mensagem: string, tipo?: TipoLog) => void;
@@ -118,8 +113,8 @@ export function useSessaoUsuario({
   const encerrarSessao = useCallback(async () => {
     try {
       await sairDaContaBackend();
-    } catch (erro) {
-      console.error("Erro ao encerrar sessão no backend:", erro);
+    } catch (error_) {
+      console.error("Erro ao encerrar sessão no backend:", error_);
     } finally {
       resetarSessaoLocal();
       adicionarLog("Sessão encerrada.", "info");

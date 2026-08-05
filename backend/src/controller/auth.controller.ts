@@ -51,9 +51,9 @@ export async function registrarUsuario(
       usuario,
       mensagem: "Usuário cadastrado com sucesso.",
     });
-  } catch (erro) {
+  } catch (error_) {
     const mensagem =
-      erro instanceof Error ? erro.message : "Erro ao cadastrar usuário.";
+      error_ instanceof Error ? error_.message : "Erro ao cadastrar usuário.";
 
     res.status(400).json({
       error: mensagem,
@@ -61,10 +61,7 @@ export async function registrarUsuario(
   }
 }
 
-export async function loginUsuario(
-  req: Request,
-  res: Response,
-): Promise<void> {
+export async function loginUsuario(req: Request, res: Response): Promise<void> {
   try {
     const { email, senha } = req.body;
 
@@ -86,9 +83,9 @@ export async function loginUsuario(
       usuario,
       mensagem: "Login realizado com sucesso.",
     });
-  } catch (erro) {
+  } catch (error_) {
     const mensagem =
-      erro instanceof Error ? erro.message : "Erro ao realizar login.";
+      error_ instanceof Error ? error_.message : "Erro ao realizar login.";
 
     res.status(401).json({
       error: mensagem,

@@ -19,12 +19,22 @@ export interface ResultadoMl {
   fonte: string;
 }
 
+function removerBarrasFinais(url: string): string {
+  let fim = url.length;
+
+  while (fim > 0 && url[fim - 1] === "/") {
+    fim -= 1;
+  }
+
+  return url.slice(0, fim);
+}
+
 export async function classificarComMlService(
   imageBase64: string,
 ): Promise<ResultadoMl> {
-  const mlServiceUrl = (
-    process.env.ML_SERVICE_URL || "http://localhost:5001"
-  ).replace(/\/+$/, "");
+  const mlServiceUrl = removerBarrasFinais(
+    process.env.ML_SERVICE_URL || "http://localhost:5001",
+  );
 
   const resposta = await fetch(`${mlServiceUrl}/predict`, {
     method: "POST",

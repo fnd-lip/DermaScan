@@ -5,7 +5,7 @@ import { classificarComMlService } from "../services/ml.service";
 import { salvarImagemBase64 } from "../services/arquivo.service";
 
 function converterParaJsonPrisma(valor: unknown): Prisma.InputJsonValue {
-  return JSON.parse(JSON.stringify(valor ?? [])) as Prisma.InputJsonValue;
+  return structuredClone(valor ?? []) as Prisma.InputJsonValue;
 }
 
 function montarUrlImagem(
@@ -96,8 +96,8 @@ export async function classificarImagem(
       imagemUri: montarUrlImagem(req, imagemUrlFinal),
       dataAnalise: analise.criadoEm.toISOString(),
     });
-  } catch (erro) {
-    console.error("Erro ao classificar imagem:", erro);
+  } catch (error_) {
+    console.error("Erro ao classificar imagem:", error_);
 
     res.status(500).json({
       error: "Erro interno ao processar a análise.",
@@ -141,8 +141,8 @@ export async function listarAnalises(
         fonte: analise.fonte,
       })),
     );
-  } catch (erro) {
-    console.error("Erro ao listar análises:", erro);
+  } catch (error_) {
+    console.error("Erro ao listar análises:", error_);
 
     res.status(500).json({
       error: "Erro interno ao buscar histórico de análises.",
@@ -191,8 +191,8 @@ export async function excluirAnalise(
     res.json({
       mensagem: "Análise excluída com sucesso.",
     });
-  } catch (erro) {
-    console.error("Erro ao excluir análise:", erro);
+  } catch (error_) {
+    console.error("Erro ao excluir análise:", error_);
 
     res.status(500).json({
       error: "Erro interno ao excluir análise.",
@@ -223,8 +223,8 @@ export async function limparAnalises(
     res.json({
       mensagem: "Histórico de análises limpo com sucesso.",
     });
-  } catch (erro) {
-    console.error("Erro ao limpar histórico:", erro);
+  } catch (error_) {
+    console.error("Erro ao limpar histórico:", error_);
 
     res.status(500).json({
       error: "Erro interno ao limpar histórico.",

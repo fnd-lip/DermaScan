@@ -66,9 +66,10 @@ export function obterPredicaoPreset(id: string) {
 }
 
 export function gerarClassificacaoLocal(seedId: string) {
-  const valorSeed = seedId
-    .split("")
-    .reduce((total, caractere) => total + caractere.charCodeAt(0), 0);
+  const valorSeed = Array.from(seedId).reduce(
+    (total, caractere) => total + (caractere.codePointAt(0) ?? 0),
+    0,
+  );
 
   const indicePrincipal = valorSeed % CLASSES_DERMATOLOGICAS.length;
   const classePrincipal = CLASSES_DERMATOLOGICAS[indicePrincipal];

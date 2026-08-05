@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Calendar, ChevronRight, ImageOff, Trash2 } from "lucide-react";
 import { Predicao } from "../../types/Predicao";
-import { obterEstiloRisco } from "../../utils/nivelDeRisco";
 import { formatarPorcentagem } from "../../utils/formatarPorcentagem";
+import { obterEstiloRisco } from "../../utils/nivelDeRisco";
 import { formatarData } from "@/src/utils/formatarData";
 
 interface ItemHistoricoProps {
   item: Predicao;
   onSelect: (item: Predicao) => void;
-  onDelete?: (e: React.MouseEvent, id: string) => void;
+  onDelete?: (event: React.MouseEvent, id: string) => void;
 }
 
 export const ItemHistorico: React.FC<ItemHistoricoProps> = ({
@@ -19,14 +19,24 @@ export const ItemHistorico: React.FC<ItemHistoricoProps> = ({
   const estilo = obterEstiloRisco(item.nivelAtencao);
   const [imagemComErro, setImagemComErro] = useState<string | null>(null);
 
+  const itemId = item.id;
+
   const temImagemValida =
     Boolean(item.imagemUri) && imagemComErro !== item.imagemUri;
 
   return (
-    <div
-      onClick={() => onSelect(item)}
-      className="bg-white border border-gray-100 p-3.5 rounded-xl hover:border-teal-200 cursor-pointer shadow-sm hover:shadow-md transition-all duration-200 flex gap-3 items-center group relative overflow-hidden"
-    >
+    <div className="bg-white border border-gray-100 p-3.5 rounded-xl hover:border-teal-200 shadow-sm hover:shadow-md transition-all duration-200 flex gap-3 items-center group relative overflow-hidden">
+      <button
+        type="button"
+        onClick={() => onSelect(item)}
+        aria-label={`Ver detalhes da análise ${item.classePrevista}`}
+        className="absolute inset-0 z-10 rounded-xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-500"
+      >
+        <span className="sr-only">
+          Ver detalhes da análise {item.classePrevista}
+        </span>
+      </button>
+
       <div className="w-14 h-14 rounded-lg bg-slate-100 overflow-hidden relative shrink-0 border border-gray-150">
         {temImagemValida ? (
           <img
@@ -73,20 +83,25 @@ export const ItemHistorico: React.FC<ItemHistoricoProps> = ({
       </div>
 
       <div className="flex items-center gap-1 shrink-0">
-        {onDelete && item.id && (
+        {onDelete && itemId && (
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(e, item.id!);
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onDelete(event, itemId);
             }}
-            className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors pointer-events-auto"
+            className="relative z-20 p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
             title="Excluir análise"
+            aria-label={`Excluir análise ${item.classePrevista}`}
           >
             <Trash2 className="w-4 h-4" />
           </button>
         )}
 
-        <div className="text-gray-300 group-hover:text-teal-600 transition-colors">
+        <div
+          aria-hidden="true"
+          className="text-gray-300 group-hover:text-teal-600 transition-colors"
+        >
           <ChevronRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-0.5" />
         </div>
       </div>

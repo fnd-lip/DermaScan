@@ -2,13 +2,15 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import path from "path";
+import path from "node:path";
 import { authRoutes } from "./routes/auth.routes";
 import { classificacaoRoutes } from "./routes/classificacao.routes";
 
 dotenv.config();
 
 const app = express();
+
+app.disable("x-powered-by");
 
 const origensPermitidas = [
   "http://localhost",
@@ -30,10 +32,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json({ limit: "15mb" }));
 
-app.use(
-  "/uploads",
-  express.static(path.resolve(process.cwd(), "uploads")),
-);
+app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
 
 app.get("/health", (_req, res) => {
   return res.json({
