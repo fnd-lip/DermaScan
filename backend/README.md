@@ -1,24 +1,22 @@
 # DermaScan Backend
+
 ## Tecnologias
 
-* Node.js
-* TypeScript
-* Express
-* Prisma
-* PostgreSQL
-* JWT
-* Docker
+- Node.js
+- TypeScript
+- Express
+- Prisma
+- PostgreSQL
+- JWT
+- Docker
 
 ## Pré-requisitos
 
 Antes de rodar o backend, instale:
 
-```bash
-Node.js
-npm
-```
-
-Também é necessário ter acesso a um banco PostgreSQL, que pode ser local ou remoto, como Neon.
+- Node.js 22 ou superior
+- npm
+- PostgreSQL local, remoto ou executado com Docker
 
 ## Instalar dependências
 
@@ -58,14 +56,12 @@ Exemplo usando banco remoto, como Neon:
 DATABASE_URL="postgresql://usuario:senha@host-do-banco/neondb?sslmode=require"
 ```
 
-> Não coloque credenciais reais no README. Use apenas exemplos genéricos.
-
 ## Gerar Prisma Client
 
 Depois de configurar o `.env`, execute:
 
 ```bash
-npm exec -- prisma generate
+npm run prisma:generate
 ```
 
 ## Rodar migrações
@@ -79,7 +75,7 @@ npm run prisma:migrate
 Para ambiente de produção:
 
 ```bash
-npm run prisma:deploy
+npm exec -- prisma migrate deploy
 ```
 
 ## Rodar o backend
@@ -130,12 +126,6 @@ Dentro da pasta `backend`, gere a imagem:
 docker build -t dermascan-backend .
 ```
 
-Execute o container usando o arquivo `.env`:
-
-```bash
-docker run --rm -p 4000:4000 --env-file .env dermascan-backend
-```
-
 ## Scripts úteis
 
 ```bash
@@ -143,14 +133,15 @@ npm run dev
 npm run build
 npm run start
 npm run lint
+npm run lint:fix
 npm run prisma:generate
 npm run prisma:migrate
-npm run prisma:deploy
 npm run prisma:studio
+npm exec -- prisma migrate deploy
 ```
 
 ## Observação
 
 O backend salva imagens enviadas pelo usuário na pasta `uploads`.
 
-Em ambiente local, os arquivos ficam no disco da máquina. Agora em produção, recomenda-se usar um serviço externo de armazenamento.
+Em execução local com `npm run dev`, os arquivos são salvos na pasta `backend/uploads`. Em execução com Docker, a pasta deve ser montada como volume para que os arquivos não sejam perdidos ao encerrar o contêiner. 

@@ -2,15 +2,22 @@
 
 Frontend da aplicação DermaScan desenvolvido com React, Vite e TypeScript.
 
+## Tecnologias
+
+- React
+- TypeScript
+- Vite
+- Playwright
+- Docker
+
 ## Pré-requisitos
 
-Instale:
+Para rodar o frontend localmente, instale:
 
-```bash
-Node.js
-npm
-Docker
-```
+- Node.js 22 ou superior
+- npm
+
+Para rodar com Docker, também é necessário ter o Docker instalado.
 
 ## Rodar sem Docker
 
@@ -23,13 +30,13 @@ cd frontend
 Instale as dependências:
 
 ```bash
-npm install
+npm ci
 ```
 
 Crie o arquivo `.env.local`:
 
 ```env
-VITE_API_URL=http://localhost:4000
+VITE_API_URL="http://localhost:4000"
 ```
 
 Execute o frontend:
@@ -49,7 +56,7 @@ http://localhost:5173
 Dentro da pasta `frontend`, crie o arquivo `.env.production`:
 
 ```env
-VITE_API_URL=http://localhost:4000
+VITE_API_URL="http://localhost:4000"
 ```
 
 Depois gere a imagem Docker:
@@ -76,4 +83,5 @@ http://localhost:8080
 npm run typecheck
 npm run lint
 npm run build
+npx playwright test
 ```
