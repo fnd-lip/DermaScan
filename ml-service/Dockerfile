@@ -12,13 +12,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY requirements.lock.txt .
 
 RUN python -m pip install \
-    --require-hashes \
-    --no-deps \
-    --index-url https://pypi.org/simple \
-    --extra-index-url https://download.pytorch.org/whl/cpu \
-    -r requirements.lock.txt
-
-RUN groupadd --gid 10001 dermascan \
+        --require-hashes \
+        --no-deps \
+        --index-url https://pypi.org/simple \
+        --extra-index-url https://download.pytorch.org/whl/cpu \
+        -r requirements.lock.txt \
+    && groupadd --gid 10001 dermascan \
     && useradd \
         --uid 10001 \
         --gid dermascan \
