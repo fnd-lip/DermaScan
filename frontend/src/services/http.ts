@@ -9,7 +9,7 @@ export async function requisicaoApi<T>(
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(opcoes.headers ?? {}),
+      ...opcoes.headers,
     },
   });
 

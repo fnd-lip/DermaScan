@@ -3,6 +3,7 @@ from pathlib import Path
 
 import bentoml
 import torch
+from pydantic import Field
 
 from src.image_utils import (
     converter_base64_para_imagem,
@@ -42,10 +43,10 @@ class DermaScanService:
     def health(self) -> dict:
         return {
             "status": "ok",
-            "mensagem": ("ML service DermaScan rodando"),
-            "modelo": (self.preditor.arquitetura),
-            "tamanhoImagem": (self.preditor.tamanho_imagem),
-            "quantidadeClasses": (self.preditor.quantidade_classes),
+            "mensagem": "ML service DermaScan rodando",
+            "modelo": self.preditor.arquitetura,
+            "tamanhoImagem": self.preditor.tamanho_imagem,
+            "quantidadeClasses": self.preditor.quantidade_classes,
             "tta": self.preditor.usar_tta,
             "dispositivo": str(self.preditor.dispositivo),
             "framework": "PyTorch",
@@ -54,9 +55,9 @@ class DermaScanService:
     @bentoml.api(route="/predict")
     def predict(
         self,
-        imageBase64: str,
+        image_base64: str = Field(alias="imageBase64"),
     ) -> dict:
-        imagem = converter_base64_para_imagem(imageBase64)
+        imagem = converter_base64_para_imagem(image_base64)
 
         resultado = self.preditor.prever(imagem)
 
@@ -71,27 +72,23 @@ class DermaScanService:
 
             ranking.append(
                 {
-                    "classe": (self.preditor.nomes[codigo]),
+                    "classe": self.preditor.nomes[codigo],
                     "codigo": codigo,
-                    "probabilidade": (probabilidade),
-                    "probabilidadePercentual": (
-                        round(
-                            probabilidade * 100,
-                            2,
-                        )
+                    "probabilidade": probabilidade,
+                    "probabilidadePercentual": round(
+                        probabilidade * 100,
+                        2,
                     ),
-                    "nivelAtencao": (label["nivelAtencao"]),
-                    "alerta": (
-                        resultado["alertas"].get(
-                            codigo,
-                            False,
-                        )
+                    "nivelAtencao": label["nivelAtencao"],
+                    "alerta": resultado["alertas"].get(
+                        codigo,
+                        False,
                     ),
                 }
             )
 
         ranking.sort(
-            key=lambda item: (item["probabilidade"]),
+            key=lambda item: item["probabilidade"],
             reverse=True,
         )
 
@@ -101,16 +98,16 @@ class DermaScanService:
         confianca = float(probabilidades[resultado["indice"]])
 
         return {
-            "classePrevista": (self.preditor.nomes[codigo]),
+            "classePrevista": self.preditor.nomes[codigo],
             "codigo": codigo,
             "confianca": confianca,
             "confiancaPercentual": round(
                 confianca * 100,
                 2,
             ),
-            "nivelAtencao": (label["nivelAtencao"]),
+            "nivelAtencao": label["nivelAtencao"],
             "alertaAtencao": any(resultado["alertas"].values()),
             "alertas": resultado["alertas"],
             "probabilidades": ranking,
-            "fonte": (f"{self.preditor.arquitetura} " "PyTorch BentoML"),
+            "fonte": f"{self.preditor.arquitetura} PyTorch BentoML",
         }

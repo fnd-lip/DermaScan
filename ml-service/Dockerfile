@@ -6,7 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_ONLY_BINARY=:all:
+    PIP_ONLY_BINARY=:all: \
+    HOME=/home/dermascan
 
 COPY requirements.lock.txt .
 
@@ -17,8 +18,19 @@ RUN python -m pip install \
     --extra-index-url https://download.pytorch.org/whl/cpu \
     -r requirements.lock.txt
 
+RUN groupadd --gid 10001 dermascan \
+    && useradd \
+        --uid 10001 \
+        --gid dermascan \
+        --create-home \
+        --home-dir /home/dermascan \
+        --shell /usr/sbin/nologin \
+        dermascan
+
 COPY src ./src
 COPY models/modelo_dermascan.pth ./models/modelo_dermascan.pth
+
+USER dermascan
 
 EXPOSE 5001
 

@@ -13,13 +13,13 @@ export async function classificarImagemLesao(
         sampleId,
       }),
     });
-  } catch (erro) {
-    console.error("Erro na chamada da API de classificação:", erro);
+  } catch (error_) {
+    console.error("Erro na chamada da API de classificação:", error_);
 
     throw new Error(
       "Não foi possível realizar a análise no momento. Verifique sua conexão e tente novamente.",
       {
-        cause: erro,
+        cause: error_,
       },
     );
   }
@@ -31,7 +31,9 @@ export async function listarAnalises(): Promise<Predicao[]> {
   });
 }
 
-export async function excluirAnalise(id: string): Promise<{ mensagem: string }> {
+export async function excluirAnalise(
+  id: string,
+): Promise<{ mensagem: string }> {
   return requisicaoApi<{ mensagem: string }>(`/api/analyses/${id}`, {
     method: "DELETE",
   });

@@ -1,9 +1,8 @@
 import base64
-import binascii
 import io
 
 import numpy as np
-from PIL import Image, ImageOps, UnidentifiedImageError
+from PIL import Image, ImageOps
 
 MIN_IMAGE_SIZE = 128
 MAX_IMAGE_PIXELS = 40_000_000
@@ -32,7 +31,6 @@ def converter_base64_para_imagem(
             validate=True,
         )
     except (
-        binascii.Error,
         ValueError,
         TypeError,
     ) as erro:
@@ -45,9 +43,7 @@ def converter_base64_para_imagem(
         with Image.open(io.BytesIO(bytes_imagem)) as arquivo:
             arquivo.load()
             imagem = ImageOps.exif_transpose(arquivo).convert("RGB")
-
     except (
-        UnidentifiedImageError,
         OSError,
         Image.DecompressionBombError,
     ) as erro:
@@ -56,7 +52,9 @@ def converter_base64_para_imagem(
     largura, altura = imagem.size
 
     if min(largura, altura) < MIN_IMAGE_SIZE:
-        raise ValueError(f"Resolução insuficiente: " f"{largura}x{altura}.")
+        raise ValueError(
+            f"Resolução insuficiente: {largura}x{altura}."
+        )
 
     if largura * altura > MAX_IMAGE_PIXELS:
         raise ValueError("A imagem possui pixels demais")
