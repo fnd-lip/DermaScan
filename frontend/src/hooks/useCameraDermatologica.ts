@@ -1,4 +1,4 @@
-﻿import { ChangeEvent, useEffect, useRef, useState } from "react";
+﻿import { type ChangeEvent, useEffect, useRef, useState } from "react";
 
 interface UseCameraDermatologicaProps {
   onImagemSelecionada: (uri: string, sampleId?: string) => void;
@@ -9,69 +9,171 @@ export function useCameraDermatologica({
 }: UseCameraDermatologicaProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
   const [usandoCameraReal, setUsandoCameraReal] = useState(false);
   const [erroCamera, setErroCamera] = useState<string | null>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
 
+  /*
+   * Este efeito é executado depois que o React renderiza o elemento
+   * <video>. Nesse momento, videoRef.current já está disponível.
+   */
   useEffect(() => {
-    return () => encerrarCamera(stream);
-  }, [stream]);
+    const video = videoRef.current;
+    const mediaStream = streamRef.current;
+
+    if (!usandoCameraReal || !video || !mediaStream) {
+      return;
+    }
+
+    video.srcObject = mediaStream;
+
+    const reproduzirVideo = async () => {
+      try {
+        await video.play();
+      } catch (error) {
+        console.error("Erro ao reproduzir a câmera:", error);
+
+        setErroCamera(
+          "A câmera foi autorizada, mas não foi possível exibir a imagem.",
+        );
+      }
+    };
+
+    void reproduzirVideo();
+
+    return () => {
+      if (video.srcObject === mediaStream) {
+        video.srcObject = null;
+      }
+    };
+  }, [usandoCameraReal]);
+
+  /*
+   * Encerra a câmera caso o usuário saia da tela ou o componente
+   * seja desmontado.
+   */
+  useEffect(() => {
+    return () => {
+      encerrarCamera(streamRef.current);
+      streamRef.current = null;
+    };
+  }, []);
 
   const iniciarCameraReal = async () => {
     setErroCamera(null);
+
     try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error("A API de câmera não está disponível.");
+      }
+
+      encerrarCamera(streamRef.current);
+
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: 640, height: 640 },
+        video: {
+          facingMode: {
+            ideal: "environment",
+          },
+          width: {
+            ideal: 640,
+          },
+          height: {
+            ideal: 640,
+          },
+        },
         audio: false,
       });
+
+      streamRef.current = mediaStream;
       setUsandoCameraReal(true);
-      setStream(mediaStream);
-      if (videoRef.current) videoRef.current.srcObject = mediaStream;
-    } catch (error_) {
-      console.error("Camera access error:", error_);
+    } catch (error) {
+      console.error("Erro ao acessar a câmera:", error);
+
+      encerrarCamera(streamRef.current);
+      streamRef.current = null;
+      setUsandoCameraReal(false);
+
       setErroCamera(
-        "Permissão de câmera negada ou indisponível. Ative a permissão de câmera nas configurações para capturar fotos.",
+        "Permissão de câmera negada ou câmera indisponível. Verifique as permissões do navegador.",
       );
     }
   };
 
   const capturarFoto = () => {
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+
+    if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+      setErroCamera(
+        "A imagem da câmera ainda não está pronta. Aguarde alguns segundos.",
+      );
+
+      return;
+    }
 
     const canvas = document.createElement("canvas");
-    canvas.width = videoRef.current.videoWidth || 640;
-    canvas.height = videoRef.current.videoHeight || 640;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
     const contexto = canvas.getContext("2d");
-    if (!contexto) return;
 
-    contexto.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-    encerrarCamera(stream);
-    setStream(null);
+    if (!contexto) {
+      setErroCamera("Não foi possível processar a imagem capturada.");
+      return;
+    }
+
+    contexto.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const imagemCapturada = canvas.toDataURL("image/jpeg", 0.92);
+
+    encerrarCamera(streamRef.current);
+    streamRef.current = null;
+
+    video.srcObject = null;
+
     setUsandoCameraReal(false);
-    onImagemSelecionada(canvas.toDataURL("image/jpeg"), "captured_photo");
+    setErroCamera(null);
+
+    onImagemSelecionada(imagemCapturada, "captured_photo");
   };
 
   const cancelarCamera = () => {
-    encerrarCamera(stream);
-    setStream(null);
+    encerrarCamera(streamRef.current);
+    streamRef.current = null;
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+
     setUsandoCameraReal(false);
     setErroCamera(null);
   };
 
-  const abrirGaleriaNativa = () => fileInputRef.current?.click();
+  const abrirGaleriaNativa = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleFileChange = (evento: ChangeEvent<HTMLInputElement>) => {
     const arquivo = evento.target.files?.[0];
-    if (!arquivo) return;
+
+    if (!arquivo) {
+      return;
+    }
 
     const leitor = new FileReader();
+
     leitor.onload = (resultado) => {
-      if (resultado.target?.result) {
-        onImagemSelecionada(resultado.target.result as string, "uploaded_file");
+      const conteudo = resultado.target?.result;
+
+      if (typeof conteudo === "string") {
+        onImagemSelecionada(conteudo, "uploaded_file");
       }
     };
+
     leitor.readAsDataURL(arquivo);
+
+    evento.target.value = "";
   };
 
   return {
@@ -87,6 +189,6 @@ export function useCameraDermatologica({
   };
 }
 
-function encerrarCamera(stream: MediaStream | null) {
-  stream?.getTracks().forEach((track) => track.stop());
+function encerrarCamera(mediaStream: MediaStream | null) {
+  mediaStream?.getTracks().forEach((track) => track.stop());
 }
