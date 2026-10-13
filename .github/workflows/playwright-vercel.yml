@@ -3,7 +3,6 @@ name: Playwright Tests
 on:
   repository_dispatch:
     types:
-      - "vercel.deployment.success"
       - "vercel.deployment.ready"
 
   workflow_dispatch:
