@@ -9,7 +9,7 @@ anyio==4.14.2
 asgiref==3.12.1
 attrs==26.1.0
 bentoml==1.4.39
-cattrs==23.1.2
+cattrs==26.2.1
 certifi==2026.7.22
 click==8.4.2
 click-option-group==0.5.9
