@@ -1,17 +1,62 @@
 version: 2
 
 updates:
+  # Backend - Node.js
   - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "weekly"
 
+    open-pull-requests-limit: 3
+
+    allow:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+
+    groups:
+      backend-updates:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Frontend - React
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
 
+    open-pull-requests-limit: 3
+
+    allow:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+
+    groups:
+      frontend-updates:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Servico de IA - Python
   - package-ecosystem: "pip"
     directory: "/ml-service"
     schedule:
       interval: "weekly"
+
+    open-pull-requests-limit: 2
+
+    allow:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
