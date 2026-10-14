@@ -34,6 +34,11 @@ FROM node:22.23.1-alpine3.24 AS runtime
 
 WORKDIR /app
 
+# Atualiza as bibliotecas OpenSSL vulneraveis do Alpine
+RUN apk update \
+    && apk upgrade libcrypto3 libssl3 \
+    && rm -rf /var/cache/apk/*
+
 ENV NODE_ENV=production
 
 COPY package.json package-lock.json ./
@@ -43,7 +48,9 @@ RUN npm ci \
     --ignore-scripts \
     --audit=false \
     --fund=false \
-    && npm cache clean --force
+    && npm cache clean --force \
+    && rm -rf /usr/local/lib/node_modules/npm \
+    && rm -f /usr/local/bin/npm /usr/local/bin/npx
 
 COPY --from=builder --chown=node:node /app/dist ./dist
 COPY --from=builder --chown=node:node /app/prisma ./prisma
@@ -59,4 +66,4 @@ EXPOSE 4000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD wget -qO- "http://127.0.0.1:${PORT:-4000}/health" || exit 1
 
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/src/server.js"]
