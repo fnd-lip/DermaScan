@@ -16,10 +16,25 @@ updates:
           - "version-update:semver-patch"
 
     groups:
-      backend-updates:
+      # Mantem os pacotes do Prisma juntos
+      prisma:
         applies-to: version-updates
         patterns:
-          - "*"
+          - "prisma"
+          - "@prisma/client"
+          - "@prisma/adapter-pg"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Ferramentas de qualidade de codigo
+      eslint:
+        applies-to: version-updates
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "typescript-eslint"
         update-types:
           - "minor"
           - "patch"
@@ -39,10 +54,23 @@ updates:
           - "version-update:semver-patch"
 
     groups:
-      frontend-updates:
+      # Ferramentas de qualidade de codigo
+      eslint:
         applies-to: version-updates
         patterns:
-          - "*"
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "typescript-eslint"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Definicoes de tipos do TypeScript
+      typescript-types:
+        applies-to: version-updates
+        patterns:
+          - "@types/*"
         update-types:
           - "minor"
           - "patch"
@@ -60,3 +88,13 @@ updates:
         update-types:
           - "version-update:semver-minor"
           - "version-update:semver-patch"
+
+    groups:
+      # Atualiza bibliotecas relacionadas ao OpenTelemetry juntas
+      opentelemetry:
+        applies-to: version-updates
+        patterns:
+          - "opentelemetry-*"
+        update-types:
+          - "minor"
+          - "patch"
