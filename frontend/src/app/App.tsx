@@ -1,30 +1,28 @@
-﻿import { AnimatePresence } from 'motion/react';
-import { useDermaScanApp } from './hooks/useDermaScanApp';
-import { AppShell } from '../components/layout/AppShell';
-import { DashboardPrincipal } from '../components/navigation/DashboardPrincipal';
-import { FluxoAutenticacao } from '../components/navigation/FluxoAutenticacao';
+﻿import { AnimatePresence } from "motion/react";
+import { useDermaScanApp } from "./hooks/useDermaScanApp";
+import { AppShell } from "../components/layout/AppShell";
+import { DashboardPrincipal } from "../components/navigation/DashboardPrincipal";
+import { FluxoAutenticacao } from "../components/navigation/FluxoAutenticacao";
 
 export default function App() {
   const { estado, acoes } = useDermaScanApp();
 
   return (
     <AppShell
-      mostrarCabecalho={estado.faseFluxo === 'abas'}
+      mostrarCabecalho={estado.faseFluxo === "abas"}
       usuarioLogado={estado.usuarioLogado}
-      onAbrirPerfil={() => acoes.setAbaAtiva('perfil')}
-      onAbrirConfiguracoes={() => acoes.setAbaAtiva('configuracoes')}
+      onAbrirPerfil={() => acoes.setAbaAtiva("perfil")}
+      onAbrirConfiguracoes={() => acoes.setAbaAtiva("configuracoes")}
       onSairDaConta={acoes.handleSairDaConta}
     >
-      {estado.faseFluxo !== 'abas' ? (
+      {estado.faseFluxo !== "abas" ? (
         <FluxoAutenticacao
           faseFluxo={estado.faseFluxo}
-          onAbrirLogin={() => acoes.setFaseFluxo('login')}
-          onAbrirCadastro={() => acoes.setFaseFluxo('cadastro')}
-          onVoltarLanding={() => acoes.setFaseFluxo('landing')}
+          verificandoSessao={estado.verificandoSessao}
+          onAbrirLogin={() => acoes.setFaseFluxo("login")}
+          onAbrirCadastro={() => acoes.setFaseFluxo("cadastro")}
+          onVoltarLanding={() => acoes.setFaseFluxo("landing")}
           onLoginSucesso={acoes.handleLoginSucesso}
-          onCadastroSucesso={acoes.handleCadastroSucesso}
-          onFinalizarOnboarding={acoes.handleFinalizarOnboarding}
-          onAceitarAvisoMedico={acoes.handleAceitarAvisoMedico}
         />
       ) : (
         <AnimatePresence mode="wait">
@@ -37,11 +35,13 @@ export default function App() {
             isCustomPhoto={estado.isCustomPhoto}
             predicaoAtiva={estado.predicaoAtiva}
             salvoNoHistorico={estado.salvoNoHistorico}
-            salvarHistoricoAutomaticamente={estado.salvarHistoricoAutomaticamente}
+            salvarHistoricoAutomaticamente={
+              estado.salvarHistoricoAutomaticamente
+            }
             onAlterarAba={acoes.setAbaAtiva}
             onPrepararAnalise={acoes.handleIrParaAnalise}
-            onIrParaHistorico={() => acoes.setAbaAtiva('historico')}
-            onIrParaEducacao={() => acoes.setAbaAtiva('educacao')}
+            onIrParaHistorico={() => acoes.setAbaAtiva("historico")}
+            onIrParaEducacao={() => acoes.setAbaAtiva("educacao")}
             onSelecionarImagem={acoes.handleImagemSelecionada}
             onVoltarParaUpload={acoes.handleVoltarParaUpload}
             onConfirmarAnalise={acoes.handleConfirmarEClassificar}

@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { cadastrarUsuarioBackend, fazerLoginBackend } from "../services/api";
 import { normalizarMensagemErro } from "../auth/normalizarErro";
 import { salvarUsuarioAtivoLocal } from "../auth/sessaoLocal";
@@ -15,7 +15,6 @@ import {
 export function useFormularioAutenticacao({
   tipoInicial,
   onLoginSucesso,
-  onCadastroSucesso,
 }: UseFormularioAutenticacaoProps) {
   const [tipo, setTipo] = useState<TipoFormularioAutenticacao>(tipoInicial);
   const [nome, setNome] = useState("");
@@ -28,10 +27,12 @@ export function useFormularioAutenticacao({
   const [modoEsqueciSenha, setModoEsqueciSenha] = useState(false);
   const [emailEsquecido, setEmailEsquecido] = useState("");
   const [mensagemEsqueci, setMensagemEsqueci] = useState<string | null>(null);
+  const [mensagemCadastro, setMensagemCadastro] = useState<string | null>(null);
 
   const limparAlertas = () => {
     setErro(null);
     setMensagemEsqueci(null);
+    setMensagemCadastro(null);
   };
 
   const alternarTipo = (novoTipo: TipoFormularioAutenticacao) => {
@@ -49,62 +50,44 @@ export function useFormularioAutenticacao({
     limparAlertas();
   };
 
-  const handleRecuperarSenha = (evento: FormEvent) => {
+  const handleRecuperarSenha = (evento: SyntheticEvent<Element>) => {
     evento.preventDefault();
     limparAlertas();
 
-    const mensagemValidacao = validarRecuperacaoSenhaFormulario(emailEsquecido);
+    const mensagem = validarRecuperacaoSenhaFormulario(emailEsquecido);
 
-    if (mensagemValidacao) {
-      setErro(mensagemValidacao);
+    if (mensagem) {
+      setErro(mensagem);
       return;
     }
 
-    setCarregando(true);
-
-    window.setTimeout(() => {
-      setCarregando(false);
-      setMensagemEsqueci(
-        `Um link de redefinição de senha foi enviado para ${emailEsquecido}.`,
-      );
-    }, 1200);
-  };
-
-  const handleSubmit = (evento: FormEvent) => {
-    evento.preventDefault();
-    limparAlertas();
-
-    if (tipo === "cadastro") {
-      void cadastrarUsuario();
-      return;
-    }
-
-    void autenticarUsuario();
+    setErro("A recuperação de senha ainda não está disponível.");
   };
 
   const cadastrarUsuario = async () => {
-    const mensagemValidacao = validarCadastroFormulario({
+    const mensagem = validarCadastroFormulario({
       nome,
       email,
       senha,
       confirmarSenha,
     });
 
-    if (mensagemValidacao) {
-      setErro(mensagemValidacao);
+    if (mensagem) {
+      setErro(mensagem);
       return;
     }
 
     try {
       setCarregando(true);
-
       await cadastrarUsuarioBackend(nome.trim(), email.trim(), senha);
 
-      const respostaLogin = await fazerLoginBackend(email.trim(), senha);
-
-      onCadastroSucesso(
-        respostaLogin.usuario.nome,
-        respostaLogin.usuario.email,
+      setEmail(email.trim());
+      setSenha("");
+      setConfirmarSenha("");
+      setMostrarSenha(false);
+      setTipo("login");
+      setMensagemCadastro(
+        "Conta criada com sucesso! Entre com seu e-mail e senha.",
       );
     } catch (error_) {
       setErro(
@@ -116,16 +99,15 @@ export function useFormularioAutenticacao({
   };
 
   const autenticarUsuario = async () => {
-    const mensagemValidacao = validarLoginFormulario({ email, senha });
+    const mensagem = validarLoginFormulario({ email, senha });
 
-    if (mensagemValidacao) {
-      setErro(mensagemValidacao);
+    if (mensagem) {
+      setErro(mensagem);
       return;
     }
 
     try {
       setCarregando(true);
-
       const resposta = await fazerLoginBackend(email.trim(), senha);
 
       const usuarioAtivo = {
@@ -134,13 +116,26 @@ export function useFormularioAutenticacao({
       };
 
       salvarUsuarioAtivoLocal(usuarioAtivo);
-
       onLoginSucesso(usuarioAtivo.nome, usuarioAtivo.email);
     } catch (error_) {
       setErro(normalizarMensagemErro(error_, "E-mail ou senha inválidos."));
     } finally {
       setCarregando(false);
     }
+  };
+
+  const handleSubmit = (evento: SyntheticEvent<Element>) => {
+    evento.preventDefault();
+    limparAlertas();
+
+    if (carregando) return;
+
+    if (tipo === "cadastro") {
+      void cadastrarUsuario();
+      return;
+    }
+
+    void autenticarUsuario();
   };
 
   return {
@@ -155,6 +150,7 @@ export function useFormularioAutenticacao({
     modoEsqueciSenha,
     emailEsquecido,
     mensagemEsqueci,
+    mensagemCadastro,
     setNome,
     setEmail,
     setSenha,

@@ -1,4 +1,4 @@
-import { Predicao } from "../types/Predicao";
+import type { Predicao } from "../types/Predicao";
 import { requisicaoApi } from "./http";
 
 export async function classificarImagemLesao(
@@ -8,19 +8,13 @@ export async function classificarImagemLesao(
   try {
     return await requisicaoApi<Predicao>("/api/classify", {
       method: "POST",
-      body: JSON.stringify({
-        imageBase64: imagemBase64,
-        sampleId,
-      }),
+      body: JSON.stringify({ imageBase64: imagemBase64, sampleId }),
     });
   } catch (error_) {
     console.error("Erro na chamada da API de classificação:", error_);
-
     throw new Error(
       "Não foi possível realizar a análise no momento. Verifique sua conexão e tente novamente.",
-      {
-        cause: error_,
-      },
+      { cause: error_ },
     );
   }
 }
@@ -63,11 +57,7 @@ export async function cadastrarUsuarioBackend(
 ): Promise<RespostaAuth> {
   return requisicaoApi<RespostaAuth>("/auth/register", {
     method: "POST",
-    body: JSON.stringify({
-      nome,
-      email,
-      senha,
-    }),
+    body: JSON.stringify({ nome, email, senha }),
   });
 }
 
@@ -77,10 +67,16 @@ export async function fazerLoginBackend(
 ): Promise<RespostaAuth> {
   return requisicaoApi<RespostaAuth>("/auth/login", {
     method: "POST",
-    body: JSON.stringify({
-      email,
-      senha,
-    }),
+    body: JSON.stringify({ email, senha }),
+  });
+}
+
+export async function fazerLoginGoogleBackend(
+  credential: string,
+): Promise<RespostaAuth> {
+  return requisicaoApi<RespostaAuth>("/auth/google", {
+    method: "POST",
+    body: JSON.stringify({ credential }),
   });
 }
 

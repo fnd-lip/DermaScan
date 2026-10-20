@@ -54,7 +54,7 @@ export async function autenticarUsuario({ email, senha }: DadosLogin) {
     },
   });
 
-  if (!usuario) {
+  if (!usuario?.senhaHash) {
     throw new Error("E-mail ou senha inválidos.");
   }
 

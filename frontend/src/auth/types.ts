@@ -1,9 +1,8 @@
 export type TipoFormularioAutenticacao = "login" | "cadastro";
 
 export interface UseFormularioAutenticacaoProps {
-  tipoInicial: TipoFormularioAutenticacao;
-  onLoginSucesso: (nome: string, email: string) => void;
-  onCadastroSucesso: (nome: string, email: string) => void;
+  readonly tipoInicial: TipoFormularioAutenticacao;
+  readonly onLoginSucesso: (nome: string, email: string) => void;
 }
 
 export interface DadosCadastroFormulario {
