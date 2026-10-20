@@ -1,4 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+const API_URL = import.meta.env.PROD
+  ? ""
+  : (import.meta.env.VITE_API_URL ?? "http://localhost:4000");
 
 export async function requisicaoApi<T>(
   rota: string,
@@ -15,6 +17,7 @@ export async function requisicaoApi<T>(
 
   if (!resposta.ok) {
     const erro = await resposta.json().catch(() => ({}));
+
     throw new Error(erro.message || erro.error || "Erro na requisição.");
   }
 
