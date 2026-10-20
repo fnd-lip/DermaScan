@@ -12,29 +12,25 @@ export type SecaoPerfilId =
   | "privacidade"
   | "permissoes";
 
-export type TipoIconeSecaoPerfil =
-  | "info"
-  | "alerta"
-  | "privacidade"
-  | "camera";
+export type TipoIconeSecaoPerfil = "info" | "alerta" | "privacidade" | "camera";
 
 export interface SecaoPerfil {
-  id: SecaoPerfilId;
-  titulo: string;
-  tipoIcone: TipoIconeSecaoPerfil;
-  Conteudo: ComponentType;
+  readonly id: SecaoPerfilId;
+  readonly titulo: string;
+  readonly tipoIcone: TipoIconeSecaoPerfil;
+  readonly Conteudo: ComponentType;
 }
 
 export const secoesPerfil: SecaoPerfil[] = [
   {
     id: "sobre",
-    titulo: "Sobre o Aplicativo",
+    titulo: "Sobre o DermaScan",
     tipoIcone: "info",
     Conteudo: ConteudoSobreAplicativo,
   },
   {
     id: "aviso_medico",
-    titulo: "Aviso Médico Obrigatório",
+    titulo: "Uso Clínico e Limitações",
     tipoIcone: "alerta",
     Conteudo: ConteudoAvisoMedico,
   },

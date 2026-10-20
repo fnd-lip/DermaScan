@@ -1,6 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { buscarUsuarioAtual, sairDaContaBackend } from "../../services/api";
-import { AbaAtiva, FaseFluxo, TipoLog, UsuarioLogado } from "../types/fluxo";
+import type {
+  AbaAtiva,
+  FaseFluxo,
+  TipoLog,
+  UsuarioLogado,
+} from "../types/fluxo";
 
 interface UseSessaoUsuarioParams {
   adicionarLog: (mensagem: string, tipo?: TipoLog) => void;
@@ -16,8 +21,22 @@ export function useSessaoUsuario({
     null,
   );
   const [abaAtiva, setAbaAtiva] = useState<AbaAtiva>("inicio");
+  const [verificandoSessao, setVerificandoSessao] = useState(true);
   const [salvarHistoricoAutomaticamente, setSalvarHistoricoAutomaticamente] =
     useState(true);
+  const versaoSessao = useRef(0);
+
+  const carregarHistoricoSeguro = useCallback(async () => {
+    try {
+      await carregarHistoricoDoBackend();
+    } catch (error_) {
+      console.error("Falha ao carregar histórico:", error_);
+      adicionarLog(
+        "Não foi possível carregar o histórico de análises.",
+        "erro",
+      );
+    }
+  }, [adicionarLog, carregarHistoricoDoBackend]);
 
   const resetarSessaoLocal = useCallback(() => {
     setUsuarioLogado(null);
@@ -26,20 +45,22 @@ export function useSessaoUsuario({
   }, []);
 
   const iniciarSessao = useCallback(async () => {
-    try {
-      const autoSaveSalvo = localStorage.getItem("dermascan_autosave");
+    const versao = ++versaoSessao.current;
 
-      if (autoSaveSalvo !== null) {
-        setSalvarHistoricoAutomaticamente(autoSaveSalvo === "true");
+    try {
+      const autoSave = localStorage.getItem("dermascan_autosave");
+
+      if (autoSave !== null) {
+        setSalvarHistoricoAutomaticamente(autoSave === "true");
       }
 
       const resposta = await buscarUsuarioAtual();
+      if (versao !== versaoSessao.current) return;
 
       setUsuarioLogado({
         nome: resposta.usuario.nome,
         email: resposta.usuario.email,
       });
-
       setFaseFluxo("abas");
       setAbaAtiva("inicio");
 
@@ -47,61 +68,46 @@ export function useSessaoUsuario({
         `Sessão ativa encontrada para ${resposta.usuario.nome}.`,
         "sucesso",
       );
+      void carregarHistoricoSeguro();
+    } catch (error_) {
+      if (versao !== versaoSessao.current) return;
 
-      await carregarHistoricoDoBackend();
-    } catch {
+      console.error("Falha ao verificar sessão:", error_);
       resetarSessaoLocal();
-      adicionarLog("Nenhuma sessão ativa encontrada.", "info");
+      adicionarLog("Não foi possível confirmar uma sessão ativa.", "info");
+    } finally {
+      if (versao === versaoSessao.current) {
+        setVerificandoSessao(false);
+      }
     }
-  }, [adicionarLog, carregarHistoricoDoBackend, resetarSessaoLocal]);
+  }, [adicionarLog, carregarHistoricoSeguro, resetarSessaoLocal]);
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      void iniciarSessao();
-    }, 0);
+    const timeoutId = window.setTimeout(() => void iniciarSessao(), 0);
 
     return () => {
       window.clearTimeout(timeoutId);
+      versaoSessao.current += 1;
     };
   }, [iniciarSessao]);
 
   const handleLoginSucesso = useCallback(
     (nome: string, email: string) => {
+      versaoSessao.current += 1;
+      setVerificandoSessao(false);
       setUsuarioLogado({ nome, email });
       setFaseFluxo("abas");
       setAbaAtiva("inicio");
       adicionarLog(`Acesso autorizado para ${nome}.`, "sucesso");
-      void carregarHistoricoDoBackend();
+      void carregarHistoricoSeguro();
     },
-    [adicionarLog, carregarHistoricoDoBackend],
+    [adicionarLog, carregarHistoricoSeguro],
   );
-
-  const handleCadastroSucesso = useCallback(
-    (nome: string, email: string) => {
-      setUsuarioLogado({ nome, email });
-      setFaseFluxo("onboarding");
-      adicionarLog(`Novo usuário registrado: ${nome}.`, "sucesso");
-    },
-    [adicionarLog],
-  );
-
-  const handleFinalizarOnboarding = useCallback(() => {
-    setFaseFluxo("aviso_medico");
-    adicionarLog("Onboarding concluído.", "info");
-  }, [adicionarLog]);
-
-  const handleAceitarAvisoMedico = useCallback(() => {
-    setFaseFluxo("abas");
-    setAbaAtiva("inicio");
-    adicionarLog("Aviso médico aceito pelo usuário.", "sucesso");
-    void carregarHistoricoDoBackend();
-  }, [adicionarLog, carregarHistoricoDoBackend]);
 
   const handleToggleSalvarAuto = useCallback(
     (ativo: boolean) => {
       setSalvarHistoricoAutomaticamente(ativo);
       localStorage.setItem("dermascan_autosave", String(ativo));
-
       adicionarLog(
         `Salvamento automático ${ativo ? "ativado" : "desativado"}.`,
         "info",
@@ -110,14 +116,21 @@ export function useSessaoUsuario({
     [adicionarLog],
   );
 
-  const encerrarSessao = useCallback(async () => {
+  const encerrarSessao = useCallback(async (): Promise<boolean> => {
     try {
       await sairDaContaBackend();
-    } catch (error_) {
-      console.error("Erro ao encerrar sessão no backend:", error_);
-    } finally {
+
+      versaoSessao.current += 1;
       resetarSessaoLocal();
+      setVerificandoSessao(false);
       adicionarLog("Sessão encerrada.", "info");
+
+      return true;
+    } catch (error_) {
+      console.error("Erro ao encerrar sessão:", error_);
+      adicionarLog("Não foi possível sair da conta. Tente novamente.", "erro");
+
+      return false;
     }
   }, [adicionarLog, resetarSessaoLocal]);
 
@@ -125,13 +138,11 @@ export function useSessaoUsuario({
     faseFluxo,
     usuarioLogado,
     abaAtiva,
+    verificandoSessao,
     salvarHistoricoAutomaticamente,
     setFaseFluxo,
     setAbaAtiva,
     handleLoginSucesso,
-    handleCadastroSucesso,
-    handleFinalizarOnboarding,
-    handleAceitarAvisoMedico,
     handleToggleSalvarAuto,
     encerrarSessao,
   };

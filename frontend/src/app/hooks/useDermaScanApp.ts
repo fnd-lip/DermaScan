@@ -19,13 +19,11 @@ export function useDermaScanApp() {
     faseFluxo,
     usuarioLogado,
     abaAtiva,
+    verificandoSessao,
     salvarHistoricoAutomaticamente,
     setFaseFluxo,
     setAbaAtiva,
     handleLoginSucesso,
-    handleCadastroSucesso,
-    handleFinalizarOnboarding,
-    handleAceitarAvisoMedico,
     handleToggleSalvarAuto,
     encerrarSessao,
   } = useSessaoUsuario({
@@ -56,22 +54,29 @@ export function useDermaScanApp() {
   });
 
   const handleSairDaConta = useCallback(async () => {
-    await encerrarSessao();
+    const saiu = await encerrarSessao();
+
+    if (!saiu) return false;
+
     resetarAnalise();
     setHistorico([]);
+    return true;
   }, [encerrarSessao, resetarAnalise, setHistorico]);
 
-  const handleReiniciarAppCompleto = useCallback(() => {
-    void handleSairDaConta();
-    setHistorico([]);
+  const handleReiniciarAppCompleto = useCallback(async () => {
+    const saiu = await handleSairDaConta();
+
+    if (!saiu) return;
+
     adicionarLog("Aplicação reiniciada para demonstração.", "info");
-  }, [adicionarLog, handleSairDaConta, setHistorico]);
+  }, [adicionarLog, handleSairDaConta]);
 
   return {
     estado: {
       faseFluxo,
       usuarioLogado,
       abaAtiva,
+      verificandoSessao,
       faseAnalise,
       imagemSelecionada,
       isCustomPhoto,
@@ -86,9 +91,6 @@ export function useDermaScanApp() {
       setAbaAtiva,
       setFaseAnalise,
       handleLoginSucesso,
-      handleCadastroSucesso,
-      handleFinalizarOnboarding,
-      handleAceitarAvisoMedico,
       handleImagemSelecionada,
       handleVoltarParaUpload,
       handleConfirmarEClassificar,

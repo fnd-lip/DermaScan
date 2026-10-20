@@ -16,10 +16,9 @@ function obterConfiguracaoCookie(): CookieOptions {
   };
 }
 
-function configurarCookieToken(res: Response, token: string) {
+export function configurarCookieToken(res: Response, token: string): void {
   res.cookie(cookieName, token, obterConfiguracaoCookie());
 }
-
 export async function registrarUsuario(
   req: Request,
   res: Response,

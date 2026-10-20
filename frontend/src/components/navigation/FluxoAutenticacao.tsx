@@ -1,45 +1,57 @@
-import React from 'react';
-import { AnimatePresence } from 'motion/react';
-import { FaseFluxo } from '../../app/types/fluxo';
-import { FluxoCentralizado } from '../layout/FluxoCentralizado';
-import { TelaLoginCadastro } from '../../screens/TelaLoginCadastro';
-import { TelaDeApresentacao } from '../../screens/TelaDeApresentacao';
-import { TelaAvisoMedico } from '../../screens/TelaAvisoMedico';
-import { TelaLandingPage } from '../../screens/TelaLandingPage';
-import { ModalAutenticacao } from '../auth/ModalAutenticacao';
+import { AnimatePresence } from "motion/react";
+import type { FaseFluxo } from "../../app/types/fluxo";
+import { TelaLoginCadastro } from "../../screens/TelaLoginCadastro";
+import { TelaLandingPage } from "../../screens/TelaLandingPage";
+import { ModalAutenticacao } from "../auth/ModalAutenticacao";
 
 interface FluxoAutenticacaoProps {
-  faseFluxo: FaseFluxo;
-  onAbrirLogin: () => void;
-  onAbrirCadastro: () => void;
-  onVoltarLanding: () => void;
-  onLoginSucesso: (nome: string, email: string) => void;
-  onCadastroSucesso: (nome: string, email: string) => void;
-  onFinalizarOnboarding: () => void;
-  onAceitarAvisoMedico: () => void;
+  readonly faseFluxo: FaseFluxo;
+  readonly verificandoSessao: boolean;
+  readonly onAbrirLogin: () => void;
+  readonly onAbrirCadastro: () => void;
+  readonly onVoltarLanding: () => void;
+  readonly onLoginSucesso: (nome: string, email: string) => void;
 }
 
-export const FluxoAutenticacao: React.FC<FluxoAutenticacaoProps> = ({
+export function FluxoAutenticacao({
   faseFluxo,
+  verificandoSessao,
   onAbrirLogin,
   onAbrirCadastro,
   onVoltarLanding,
   onLoginSucesso,
-  onCadastroSucesso,
-  onFinalizarOnboarding,
-  onAceitarAvisoMedico,
-}) => {
+}: FluxoAutenticacaoProps) {
   const modalAutenticacaoAberto =
-    faseFluxo === 'login' || faseFluxo === 'cadastro';
+    faseFluxo === "login" || faseFluxo === "cadastro";
 
-  const tipoInicial = faseFluxo === 'cadastro' ? 'cadastro' : 'login';
+  const tipoInicial = faseFluxo === "cadastro" ? "cadastro" : "login";
+
+  if (verificandoSessao) {
+    return (
+      <div className="flex min-h-screen min-w-0 flex-1 items-center justify-center bg-[#fafafc]">
+        <output className="flex flex-col items-center gap-4">
+          <span
+            aria-hidden="true"
+            className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#e3e1eb] border-t-[#6962dd] motion-reduce:animate-none"
+          />
+
+          <span className="text-sm text-[#686577]">
+            Preparando o DermaScan...
+          </span>
+        </output>
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence mode="wait">
-      {(faseFluxo === 'landing' ||
-        faseFluxo === 'login' ||
-        faseFluxo === 'cadastro') && (
-        <div key="landing" className="-m-6 flex-1 min-h-screen overflow-hidden">
+      {(faseFluxo === "landing" ||
+        faseFluxo === "login" ||
+        faseFluxo === "cadastro") && (
+        <div
+          key="landing"
+          className="min-h-screen min-w-0 flex-1 overflow-x-clip"
+        >
           <TelaLandingPage
             onAbrirLogin={onAbrirLogin}
             onAbrirCadastro={onAbrirCadastro}
@@ -53,29 +65,10 @@ export const FluxoAutenticacao: React.FC<FluxoAutenticacaoProps> = ({
               key={tipoInicial}
               tipoInicial={tipoInicial}
               onLoginSucesso={onLoginSucesso}
-              onCadastroSucesso={onCadastroSucesso}
             />
           </ModalAutenticacao>
         </div>
       )}
-
-      {faseFluxo === 'onboarding' && (
-        <FluxoCentralizado
-          key="onboarding"
-          className="max-w-xl min-h-130 bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 flex flex-col"
-        >
-          <TelaDeApresentacao onFinalizarOnboarding={onFinalizarOnboarding} />
-        </FluxoCentralizado>
-      )}
-
-      {faseFluxo === 'aviso_medico' && (
-        <FluxoCentralizado
-          key="aviso_medico"
-          className="max-w-xl min-h-135 bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 flex flex-col"
-        >
-          <TelaAvisoMedico onAceitarAviso={onAceitarAvisoMedico} />
-        </FluxoCentralizado>
-      )}
     </AnimatePresence>
   );
-};
+}
