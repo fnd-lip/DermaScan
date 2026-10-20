@@ -12,18 +12,17 @@ test("deve exibir a landing page pública", async ({ page }) => {
   await expect(page.locator("body")).toContainText(/DermaScan/i);
 
   await expect(
-    page.getByRole("button", { name: /Acessar sistema/i }),
+    page.getByRole("button", { name: /^Entrar$/i }).first(),
   ).toBeVisible();
 });
 
-test("deve abrir o modal de login ao clicar em acessar sistema", async ({
-  page,
-}) => {
+test("deve abrir o modal de login ao clicar em Entrar", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByRole("button", { name: /Acessar sistema/i }).click();
+  const botaoEntrar = page.getByRole("button", { name: /^Entrar$/i }).first();
 
-  await expect(
-    page.getByText(/Entrar|Login|Acessar conta|Bem-vindo/i).first(),
-  ).toBeVisible();
+  await expect(botaoEntrar).toBeVisible();
+  await botaoEntrar.click();
+
+  await expect(page.locator('input[type="email"]').first()).toBeVisible();
 });
