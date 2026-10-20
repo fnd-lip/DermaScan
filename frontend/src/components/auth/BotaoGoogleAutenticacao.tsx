@@ -34,7 +34,7 @@ export function BotaoGoogleAutenticacao({
           onError={onErro}
           type="standard"
           theme="outline"
-          size="large"
+          size="medium"
           shape="rectangular"
           text="continue_with"
           logo_alignment="left"
