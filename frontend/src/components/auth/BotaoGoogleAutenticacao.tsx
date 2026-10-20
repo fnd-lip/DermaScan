@@ -39,6 +39,7 @@ export function BotaoGoogleAutenticacao({
           text="continue_with"
           logo_alignment="left"
           width="320"
+          use_fedcm_for_button={true}
         />
       </GoogleOAuthProvider>
     </div>
