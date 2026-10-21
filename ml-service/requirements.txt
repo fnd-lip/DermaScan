@@ -59,7 +59,7 @@ python-multipart==0.0.32
 PyYAML==6.0.3
 pyzmq==27.1.0
 rich==15.0.0
-rich-toolkit==0.20.3
+rich-toolkit==0.20.6
 safetensors==0.8.0
 schema==0.7.8
 simple-di==0.1.5
