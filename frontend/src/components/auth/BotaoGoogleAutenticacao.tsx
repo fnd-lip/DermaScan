@@ -10,6 +10,7 @@ export function BotaoGoogleAutenticacao({
   onErro,
 }: BotaoGoogleAutenticacaoProps) {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const usarRedirect = import.meta.env.PROD;
 
   if (!clientId) {
     return (
@@ -39,7 +40,13 @@ export function BotaoGoogleAutenticacao({
           text="continue_with"
           logo_alignment="left"
           width="320"
-          use_fedcm_for_button={true}
+          ux_mode={usarRedirect ? "redirect" : "popup"}
+          login_uri={
+            usarRedirect
+              ? `${window.location.origin}/auth/google/redirect`
+              : undefined
+          }
+          use_fedcm_for_button={!usarRedirect}
         />
       </GoogleOAuthProvider>
     </div>
