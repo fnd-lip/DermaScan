@@ -38,6 +38,6 @@
     "globals": "^17.6.0",
     "tailwindcss": "^4.1.14",
     "typescript": "~5.8.2",
-    "typescript-eslint": "^8.71.2"
+    "typescript-eslint": "^8.72.0"
   }
 }
